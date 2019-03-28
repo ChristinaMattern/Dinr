@@ -17,9 +17,8 @@
         android:layout_marginTop="16dp"
         android:text="Registration"
         android:textColor="@android:color/black"
-        android:textSize="24sp"
         android:textStyle="bold"
-        app:layout_constraintHorizontal_bias="0.21"
+        android:textSize="35sp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -28,14 +27,13 @@
         android:id="@+id/first_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="50dp"
-        android:layout_marginTop="24dp"
         android:hint="Enter First Name"
         android:inputType="textMultiLine"
-        android:textSize="14sp"
+        app:layout_constraintTop_toBottomOf="@+id/register_title"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/register_title" />
+        android:textSize="30sp"
+        android:layout_margin="50dp"/>
     <!--enters last name-->
     <EditText
         android:id="@+id/last_name"
@@ -43,94 +41,67 @@
         android:layout_height="wrap_content"
         android:hint="Enter Last Name"
         android:inputType="textMultiLine"
-        android:textSize="14sp"
-        app:layout_constraintHorizontal_bias="0.496"
+        app:layout_constraintTop_toBottomOf="@+id/first_name"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/first_name" />
+        android:textSize="30sp"/>
     <!--enters strose id-->
     <EditText
         android:id="@+id/strose_id"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
         android:hint="Enter Strose ID"
         android:inputType="textMultiLine"
-        android:textSize="14sp"
+        app:layout_constraintTop_toBottomOf="@+id/last_name"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/last_name" />
+        android:textSize="30sp"/>
     <!--enters email-->
     <EditText
         android:id="@+id/email"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
         android:hint="Enter Strose email"
         android:inputType="textMultiLine"
-        android:textSize="14sp"
+        android:textSize="30sp"
+        app:layout_constraintTop_toBottomOf="@+id/strose_id"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/strose_id" />
+        app:layout_constraintRight_toRightOf="parent"/>
     <!--enters password-->
     <EditText
         android:id="@+id/password"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
         android:hint="Enter Password"
         android:inputType="textMultiLine"
-        android:textSize="14sp"
+        app:layout_constraintTop_toBottomOf="@+id/email"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/email" />
+        android:textSize="30sp"/>
     <!--Re enter password for verification-->
     <EditText
         android:id="@+id/re_password"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
         android:hint="Re-enter Password "
         android:inputType="textMultiLine"
-        android:textSize="14sp"
-        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintTop_toBottomOf="@+id/password"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/password" />
+        android:textSize="30sp"/>
     <!--Register button-->
     <Button
         android:id="@+id/register_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="15dp"
-        android:layout_marginTop="116dp"
-        android:layout_marginBottom="8dp"
         android:text="Register"
-        android:textSize="21dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:textSize="35dp"
+        app:layout_constraintTop_toBottomOf="@+id/re_password"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/re_password"
-        app:layout_constraintVertical_bias="0.00999999" />
+        android:layout_margin="15dp"
+        />
 
-    <!--missingInfo TextView-->
-    <TextView
-        android:id="@+id/missingInfoTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginBottom="8dp"
-        android:textSize="16sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/register_button"
-        app:layout_constraintVertical_bias="0.223" />
 
 
 </android.support.constraint.ConstraintLayout>
