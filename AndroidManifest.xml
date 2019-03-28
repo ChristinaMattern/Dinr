@@ -3,8 +3,8 @@
     package="com.example.simpletestlogin">
 
     <supports-screens
-        android:normalScreens="true"
         android:largeScreens="true"
+        android:normalScreens="true"
         android:smallScreens="true"
         android:xlargeScreens="true" />
 
@@ -15,7 +15,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".HomeScreen"></activity>
+        <activity android:name=".Register"></activity>
+        <activity android:name=".HomeScreen" />
         <activity android:name=".LoginScreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
