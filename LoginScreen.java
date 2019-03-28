@@ -51,7 +51,7 @@ public class LoginScreen extends AppCompatActivity {
       registerButton.setOnClickListener(new View.OnClickListener() {
           @Override
           public void onClick(View v) {
-              // fill in with intent for registration page
+              startActivity(new Intent(LoginScreen.this, Register.class));
           }
       });
     }
