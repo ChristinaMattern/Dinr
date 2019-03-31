@@ -9,7 +9,7 @@
     android:background="#FFE03B"
     tools:context=".LoginScreen">
 
-<!-- UserName EditText-->
+    <!-- UserName EditText-->
     <EditText
         android:id="@+id/userNameEditText"
         android:layout_width="wrap_content"
@@ -27,7 +27,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-<!--Login Button-->
+    <!--Login Button-->
     <Button
         android:id="@+id/loginButton"
         android:layout_width="wrap_content"
@@ -68,7 +68,7 @@
         app:layout_constraintTop_toBottomOf="@+id/userNameEditText"
         app:layout_constraintVertical_bias="0.035" />
 
-<!--IncorrectMessage TextView-->
+    <!--IncorrectMessage TextView-->
     <TextView
         android:id="@+id/incorrectMessageTextView"
         android:layout_width="wrap_content"
@@ -109,7 +109,7 @@
         app:layout_constraintVertical_bias="0.15"
         android:textSize="24sp"/>
 
-<!--Register Button-->
+    <!--Register Button-->
     <Button
         android:id="@+id/registerButton"
         style="?android:attr/borderlessButtonStyle"

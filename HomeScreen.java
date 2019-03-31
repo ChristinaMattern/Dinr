@@ -1,4 +1,4 @@
-package com.example.simpletestlogin;
+package com.example.dinr;
 /**
  * @author Christina Mattern
  * @date 3/25/2019

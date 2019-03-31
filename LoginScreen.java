@@ -1,4 +1,5 @@
-package com.example.simpletestlogin;
+package com.example.dinr;
+
 /**
  * @author Christina Mattern
  * @date 3/25/2019
@@ -20,6 +21,7 @@ public class LoginScreen extends AppCompatActivity {
     private EditText passwordEditTextNum; //password EditText
     private TextView incorrectMessageTextView; //incorrectMessage TextView
     private Button registerButton; //register Button (Borderless)
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,25 +36,25 @@ public class LoginScreen extends AppCompatActivity {
             // creates an OnClick that brings to validate method
             @Override
             public void onClick(View v) {
-               validate();
+                validate();
             }
-            public void validate(){
+
+            public void validate() {
                 // this method will test the entered username and password against saved usernames and passwords in a database
-                if (userNameEditText.getText().toString().equals("student123") && passwordEditTextNum.getText().toString().equals("456")){
+                if (userNameEditText.getText().toString().equals("student123") && passwordEditTextNum.getText().toString().equals("456")) {
                     startActivity(new Intent(LoginScreen.this, HomeScreen.class));
-                }
-                else{
+                } else {
                     // this message displays if the user enters an incorrect username and/or password
                     incorrectMessageTextView.setText("Incorrect Combination of Username and Password. Try Again!");
                 }
             }
         });
 
-      registerButton.setOnClickListener(new View.OnClickListener() {
-          @Override
-          public void onClick(View v) {
-              startActivity(new Intent(LoginScreen.this, Register.class));
-          }
-      });
+        registerButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(LoginScreen.this, Register.class));
+            }
+        });
     }
 }
