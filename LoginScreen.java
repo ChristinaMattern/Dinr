@@ -8,12 +8,19 @@ package com.example.dinr;
  */
 
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
 
 public class LoginScreen extends AppCompatActivity {
 
@@ -21,6 +28,7 @@ public class LoginScreen extends AppCompatActivity {
     private EditText passwordEditTextNum; //password EditText
     private TextView incorrectMessageTextView; //incorrectMessage TextView
     private Button registerButton; //register Button (Borderless)
+    private FirebaseAuth firebaseAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,8 +38,9 @@ public class LoginScreen extends AppCompatActivity {
         userNameEditText = findViewById(R.id.userNameEditText);
         passwordEditTextNum = findViewById(R.id.passwordEditTextNum);
         Button loginButton = findViewById((R.id.loginButton));
-        incorrectMessageTextView = findViewById(R.id.incorrectMessageTextView);
         registerButton = findViewById(R.id.registerButton);
+
+        firebaseAuth = FirebaseAuth.getInstance();
         loginButton.setOnClickListener(new View.OnClickListener() {
             // creates an OnClick that brings to validate method
             @Override
@@ -40,13 +49,20 @@ public class LoginScreen extends AppCompatActivity {
             }
 
             public void validate() {
-                // this method will test the entered username and password against saved usernames and passwords in a database
-                if (userNameEditText.getText().toString().equals("student123") && passwordEditTextNum.getText().toString().equals("456")) {
-                    startActivity(new Intent(LoginScreen.this, HomeScreen.class));
-                } else {
-                    // this message displays if the user enters an incorrect username and/or password
-                    incorrectMessageTextView.setText("Incorrect Combination of Username and Password. Try Again!");
-                }
+                String email = userNameEditText.getText().toString();
+                String password = passwordEditTextNum.getText().toString();
+                firebaseAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                       if (task.isSuccessful()){
+                           Toast.makeText(LoginScreen.this, "Login Successful!", Toast.LENGTH_SHORT).show();
+                           startActivity(new Intent(LoginScreen.this, HomeScreen.class));
+                       }
+                       else{
+                           Toast.makeText(LoginScreen.this, "Login Unsuccessful!", Toast.LENGTH_SHORT).show();
+                       }
+                    }
+                });
             }
         });
 

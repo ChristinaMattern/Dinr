@@ -34,7 +34,6 @@ public class Register extends AppCompatActivity {
         newUserPassword = findViewById(R.id.password);
         confirmPassword = findViewById(R.id.re_password);
         studentID = findViewById(R.id.strose_id);
-        missingInfo = findViewById(R.id.missingInfoTextView);
         firebaseAuth = FirebaseAuth.getInstance();
 
         registerButton.setOnClickListener(new View.OnClickListener() {
@@ -68,14 +67,17 @@ public class Register extends AppCompatActivity {
     }
 
     private Boolean validate(String fName, String lName, String id, String email, String password, String confirmPass) {
-        if (!fName.isEmpty() && !lName.isEmpty() && !id.isEmpty() && !email.isEmpty() && !password.isEmpty() && !confirmPass.isEmpty()&& password.equals(confirmPass)) {
+        if (!fName.isEmpty() && !lName.isEmpty() && !id.isEmpty() && !email.isEmpty() && !password.isEmpty() && !confirmPass.isEmpty()&& password.equals(confirmPass) && password.length() >= 6) {
             return true;
         }
+        else if(password.length() < 6){
+            Toast.makeText(Register.this,"Passwords must be 6 numbers or longer!", Toast.LENGTH_SHORT).show();
+        }
         else if (!password.equals(confirmPass)){
-            missingInfo.setText("Password does not match");
+            Toast.makeText(Register.this,"Passwords do not match!", Toast.LENGTH_SHORT).show();
         }
         else{
-            missingInfo.setText("All fields must be filled");
+            Toast.makeText(Register.this,"All fields must be filled!", Toast.LENGTH_SHORT).show();;
         }
         return false;
     }
