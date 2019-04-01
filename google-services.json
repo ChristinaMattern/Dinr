@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "595964194711",
+    "firebase_url": "https://dinr-77763.firebaseio.com",
+    "project_id": "dinr-77763",
+    "storage_bucket": "dinr-77763.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:595964194711:android:d27491d66c29b23a",
+        "android_client_info": {
+          "package_name": "com.example.dinr"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "595964194711-t0i41tp1nr8iqqq2r9t0vj268s42cvnp.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA5BfCsVm-HkSc4mCE1nYSWuGSw31Y1SsE"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
