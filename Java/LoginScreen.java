@@ -21,6 +21,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthException;
 
 public class LoginScreen extends AppCompatActivity {
 
@@ -54,13 +55,13 @@ public class LoginScreen extends AppCompatActivity {
                 firebaseAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
-                       if (task.isSuccessful()){
-                           Toast.makeText(LoginScreen.this, "Login Successful!", Toast.LENGTH_SHORT).show();
-                           startActivity(new Intent(LoginScreen.this, HomeScreen.class));
-                       }
-                       else{
-                           Toast.makeText(LoginScreen.this, "Login Unsuccessful!", Toast.LENGTH_SHORT).show();
-                       }
+                        if (task.isSuccessful()){
+                            Toast.makeText(LoginScreen.this, "Login Successful!", Toast.LENGTH_SHORT).show();
+                            startActivity(new Intent(LoginScreen.this, HomeScreen.class));
+                        }
+                        else{
+                            Toast.makeText(LoginScreen.this, "Login Unsuccessful!", Toast.LENGTH_SHORT).show();
+                        }
                     }
                 });
             }
