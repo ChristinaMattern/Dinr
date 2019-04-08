@@ -4,29 +4,22 @@ import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.internal.measurement.zzaa;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
-import com.google.firebase.auth.ProviderQueryResult;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class Register extends AppCompatActivity {
     private DatabaseReference mDatabase;
@@ -61,75 +54,55 @@ public class Register extends AppCompatActivity {
                 final String password = newUserPassword.getText().toString();
                 final String confirmPass = confirmPassword.getText().toString();
                 final String id = studentID.getText().toString();
-                final boolean[] checked = new boolean[2];//to approve that id was checked
+                final boolean[] checked = new boolean[1];//to approve that id was checked
                 checked[0] = true;//id slot
-                checked[1]=false ;
-                FirebaseAuth mAuth = FirebaseAuth.getInstance();
-                mAuth.fetchProvidersForEmail(email).addOnCompleteListener(new OnCompleteListener<ProviderQueryResult>() {
+
+                mDatabase = FirebaseDatabase.getInstance().getReference().child("users");
+                mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
-                    public void onComplete(@NonNull Task<ProviderQueryResult> task) {
-                        if(task.isSuccessful()){//if email is not in use then it will register
-                            checked[1]=true;
-                        }
-                        if(checked[1]==true){
-
-                            mDatabase = FirebaseDatabase.getInstance().getReference().child("users");
-                            mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(@NonNull DataSnapshot snapShot) {
-                                    if (snapShot.hasChild(id)) {//checks to see if another user has an the same id
+                    public void onDataChange(@NonNull DataSnapshot snapShot) {
+                        if (snapShot.hasChild(id)) {//checks to see if another user has an the same id
                                         checked[0] = false;
-                                    }
-                                    if (checked[0] == true) {
-                                        if (validate(fName, lName, id, email, password, confirmPass)) {
+                        }
+                        if (checked[0] == true) {
+                            if (validate(fName, lName, id, email, password, confirmPass)) {
 
-                                            firebaseAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                                                @Override
-                                                public void onComplete(@NonNull Task<AuthResult> task) {
-                                                    if (task.isSuccessful()) {
-                                                        mDatabase = FirebaseDatabase.getInstance().getReference();
-                                                        writeNewUser(id, fName, lName, email, password);
-                                                        Toast.makeText(Register.this, "Registration Successful!", Toast.LENGTH_SHORT).show();
-                                                        startActivity(new Intent(Register.this, HomeScreen.class));
-                                                    } else {
-                                                        try
-                                                        {
-                                                            throw task.getException();
-                                                        }
-                                                        catch (FirebaseAuthUserCollisionException existEmail)
-                                                        {
-                                                            Toast.makeText(Register.this, "Email already registered", Toast.LENGTH_SHORT).show();
-
-
-                                                        }
-                                                        catch (Exception e)
-                                                        {
-                                                            Toast.makeText(Register.this, "Registration Unsuccessful!", Toast.LENGTH_SHORT).show();
-                                                        }
-                                                    }
-                                                }
-                                            });
+                                firebaseAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<AuthResult> task) {
+                                        if (task.isSuccessful()) {
+                                            mDatabase = FirebaseDatabase.getInstance().getReference();
+                                            writeNewUser(id, fName, lName, email, password);
+                                            Toast.makeText(Register.this, "Registration Successful!", Toast.LENGTH_SHORT).show();
+                                            startActivity(new Intent(Register.this, HomeScreen.class));
+                                        } else {
+                                            try {
+                                                throw task.getException();
+                                            } catch (FirebaseAuthUserCollisionException existEmail) {
+                                                Toast.makeText(Register.this, "Email already registered", Toast.LENGTH_SHORT).show();
+                                            } catch (Exception e) {
+                                                Toast.makeText(Register.this, "Registration Unsuccessful!", Toast.LENGTH_SHORT).show();
+                                            }
                                         }
-                                    } else {
-                                        Toast.makeText(Register.this, "ID is already registered", Toast.LENGTH_SHORT).show();
                                     }
-                                }
-
-                                @Override
-                                public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                                }
-                            });
-
+                                });
+                            }
                         }
-                        else{
-                            Toast.makeText(Register.this, "Email is already registered", Toast.LENGTH_SHORT).show();
+                        else {
+                            Toast.makeText(Register.this, "ID is already registered", Toast.LENGTH_SHORT).show();
                         }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
                     }
                 });
             }
         });
+
     }
+
 
     //adds user to database
     private void writeNewUser(String id, String fName, String lName, String email, String password) {
