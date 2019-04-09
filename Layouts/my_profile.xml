@@ -6,10 +6,29 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#FFE03B"
     tools:context=".MyProfile">
 
     <TextView
-        android:id="@+id/textView"
+    android:id="@+id/profileView"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="8dp"
+    android:layout_marginLeft="8dp"
+    android:layout_marginTop="8dp"
+    android:layout_marginEnd="8dp"
+    android:layout_marginRight="8dp"
+    android:layout_marginBottom="8dp"
+    android:text="My Profile"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent"
+    app:layout_constraintVertical_bias="0.091"
+    tools:text="My Profile" />
+
+    <TextView
+        android:id="@+id/fullName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -18,12 +37,13 @@
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginBottom="8dp"
-        android:text="My Profile"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.091"
-        tools:text="My Profile" />
+        android:text="Full Name"
+        android:textSize="20sp"
+        app:layout_constraintTop_toBottomOf="@+id/profileView"
+        app:layout_constraintLeft_toRightOf="@+id/profileView"
+        app:layout_constraintRight_toLeftOf="@+id/profileView"
+        tools:text="Full Name" />
+
+
 
 </android.support.constraint.ConstraintLayout>
