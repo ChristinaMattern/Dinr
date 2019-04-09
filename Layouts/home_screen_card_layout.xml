@@ -9,7 +9,8 @@
 
     <ImageView
         android:id="@+id/card_background"
-        android:layout_width="match_parent"
+        android:scaleType="fitXY"
+        android:layout_width="wrap_content"
         android:layout_height="243dp"
         android:layout_marginBottom="8dp"
         android:background="#ECECEC"
