@@ -1,5 +1,7 @@
 package com.example.dinr;
 /**
+ package com.example.dinr;
+ /**
  * @author Christina Mattern
  * @date 3/25/2019
  * This is the home screen for the DINR application
@@ -59,7 +61,7 @@ public class HomeScreen extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-         firebaseAuth = firebaseAuth.getInstance();
+        firebaseAuth = firebaseAuth.getInstance();
         switch (item.getItemId()){
             case R.id.Settings:
                 Toast.makeText(HomeScreen.this, "Settings", Toast.LENGTH_SHORT).show();
@@ -70,7 +72,13 @@ public class HomeScreen extends AppCompatActivity {
                 startActivity(new Intent(HomeScreen.this, LoginScreen.class));
                 return true;
             case R.id.Help:
-                Toast.makeText(HomeScreen.this, "Help Screen", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(HomeScreen.this, Faq.class));
+                return true;
+            case R.id.MyProfile:
+                startActivity(new Intent(HomeScreen.this, MyProfile.class));
+                return true;
+            case R.id.EditProfile:
+                startActivity(new Intent(HomeScreen.this, EditProfile.class));
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
