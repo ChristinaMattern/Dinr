@@ -15,6 +15,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -62,7 +63,7 @@ public class Register extends AppCompatActivity {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapShot) {
                         if (snapShot.hasChild(id)) {//checks to see if another user has an the same id
-                                        checked[0] = false;
+                            checked[0] = false;
                         }
                         if (checked[0] == true) {
                             if (validate(fName, lName, id, email, password, confirmPass)) {
@@ -72,7 +73,8 @@ public class Register extends AppCompatActivity {
                                     public void onComplete(@NonNull Task<AuthResult> task) {
                                         if (task.isSuccessful()) {
                                             mDatabase = FirebaseDatabase.getInstance().getReference();
-                                            writeNewUser(id, fName, lName, email, password);
+                                            FirebaseUser currentFirebaseUser = FirebaseAuth.getInstance().getCurrentUser() ;
+                                            writeNewUser(currentFirebaseUser.getUid(),id, fName, lName, email, password);
                                             Toast.makeText(Register.this, "Registration Successful!", Toast.LENGTH_SHORT).show();
                                             startActivity(new Intent(Register.this, HomeScreen.class));
                                         } else {
@@ -105,7 +107,7 @@ public class Register extends AppCompatActivity {
 
 
     //adds user to database
-    private void writeNewUser(String id, String fName, String lName, String email, String password) {
+    private void writeNewUser(String userId, String id, String fName, String lName, String email, String password) {
         User user = new User(id, fName, lName, email, password);
 
         mDatabase.child("users").child(id).setValue(id);
@@ -113,6 +115,7 @@ public class Register extends AppCompatActivity {
         mDatabase.child("users").child(id).child("lName").setValue(lName);
         mDatabase.child("users").child(id).child("email").setValue(email);
         mDatabase.child("users").child(id).child("password").setValue(password);
+        mDatabase.child("users").child(id).child("userId").setValue(userId);
 
     }
 
@@ -132,4 +135,3 @@ public class Register extends AppCompatActivity {
     }
 
 }
-
