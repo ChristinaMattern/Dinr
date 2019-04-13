@@ -21,29 +21,44 @@ import java.util.List;
 import java.util.concurrent.LinkedBlockingDeque;
 
 public class MyProfile extends AppCompatActivity {
-    TextView fullName;
+    private TextView fullName;
     private String userId;
+    private TextView bioText;
+    private TextView yearText;
+    private TextView majorText;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.my_profile);
         fullName = (TextView)findViewById(R.id.fullName);
+        bioText = (TextView)findViewById(R.id.bioText);
+        yearText = (TextView)findViewById(R.id.yearText);
+        majorText = (TextView)findViewById(R.id.majorText);
         FirebaseUser currentFirebaseUser = FirebaseAuth.getInstance().getCurrentUser() ;
-        userId=currentFirebaseUser.getUid();
+        userId=currentFirebaseUser.getUid();//retrieves user id of signed in user
         final DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
-        Query query = rootRef.child("users").orderByChild("userId").equalTo(userId);
+        Query query = rootRef.child("users").orderByChild("userId").equalTo(userId);//finds the user in the database
 
         ValueEventListener valueEventListener = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 String fName="";
                 String lName="";
+                String bio="";
+                String year="";
+                String major="";
                 for(DataSnapshot ds : dataSnapshot.getChildren()) {
-                     fName= (String) ds.child("fName").getValue();
-                     lName= (String) ds.child("lName").getValue();
+                     fName= (String) ds.child("fName").getValue();//retrieves first name
+                     lName= (String) ds.child("lName").getValue();//retrieves last name
+                     bio= (String) ds.child("bio").getValue();//retrieves bio
+                     year= (String) ds.child("year").getValue();//retrieves year
+                     major= (String) ds.child("major").getValue();//retrieves major
                 }
 
-                fullName.setText(fName+" "+lName);
+                fullName.setText(fName+" "+lName);//combines first and last name to create full name
+                bioText.setText(bio);//sets bio
+                yearText.setText(year);//sets year
+                majorText.setText(major);//sets major
 
             }
 
