@@ -10,7 +10,7 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:background="#FFE03B"
         tools:context=".EditProfile">
 
@@ -172,7 +172,7 @@
             android:layout_marginEnd="8dp"
             android:layout_marginRight="8dp"
             android:text="What Year are You?"
-            app:layout_constraintBottom_toTopOf="@+id/radioGroup"
+            app:layout_constraintBottom_toTopOf="@+id/year"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.13"
             app:layout_constraintStart_toStartOf="parent"
@@ -191,7 +191,7 @@
             android:text="Enter Your Major"
             app:layout_constraintBottom_toTopOf="@+id/bioWord"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/radioGroup"
+            app:layout_constraintStart_toEndOf="@+id/year"
             app:layout_constraintTop_toBottomOf="@+id/fullName"
             app:layout_constraintVertical_bias="0.17000002" />
 
@@ -208,7 +208,7 @@
             android:text=" "
             app:layout_constraintBottom_toTopOf="@+id/bioWord"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/radioGroup"
+            app:layout_constraintStart_toEndOf="@+id/year"
             app:layout_constraintTop_toBottomOf="@+id/majorWord"
             app:layout_constraintVertical_bias="0.0" />
 
