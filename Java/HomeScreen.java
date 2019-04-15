@@ -1,5 +1,4 @@
-package com.example.dinr;
-/**
+
  package com.example.dinr;
  /**
  * @author Christina Mattern
@@ -7,7 +6,9 @@ package com.example.dinr;
  * This is the home screen for the DINR application
  */
 
+import android.content.Context;
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -23,15 +24,21 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class HomeScreen extends AppCompatActivity {
+public class HomeScreen extends AppCompatActivity implements Home_Screen_Adapter.OnItemListener {
     private FirebaseAuth firebaseAuth;
     private TextView greeting;
-    private ImageButton btn1, btn2, btn3;
-
+    private String userId;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,12 +49,34 @@ public class HomeScreen extends AppCompatActivity {
         mList.add(new item(R.drawable.cafe,"Go to Dining Options"));
         mList.add(new item(R.drawable.search, "Go to Canvas"));
         mList.add(new item(R.drawable.friends,"Find Friends"));
-        Home_Screen_Adapter adapter = new Home_Screen_Adapter(HomeScreen.this, mList);
+        Home_Screen_Adapter adapter = new Home_Screen_Adapter(HomeScreen.this, mList, this);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        greeting = findViewById(R.id.home_screenTV);
-        greeting.setText("Welcome to the Home Screen");
+        FirebaseUser currentFirebaseUser = FirebaseAuth.getInstance().getCurrentUser() ;
+        userId=currentFirebaseUser.getUid();
+        final DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
+        Query query = rootRef.child("users").orderByChild("userId").equalTo(userId);
+
+        ValueEventListener valueEventListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                String fName="";
+                for(DataSnapshot ds : dataSnapshot.getChildren()) {
+                    fName= (String) ds.child("fName").getValue();
+                }
+
+                greeting = findViewById(R.id.home_screenTV);
+                greeting.setText("Welcome to the Home Screen, " + fName);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        };
+        query.addListenerForSingleValueEvent(valueEventListener);
+
 
     }
 
@@ -86,4 +115,20 @@ public class HomeScreen extends AppCompatActivity {
     }
 
 
+    @Override
+    public void onItemClick(int position) {
+        switch(position){
+            case 0:
+                startActivity(new Intent(this, MyProfile.class));
+                break;
+            case 1:
+                startActivity(new Intent(this, EditProfile.class));
+                break;
+            case 2:
+                startActivity(new Intent(this, Faq.class));
+                break;
+            default:
+                Toast.makeText(this, "Error", Toast.LENGTH_SHORT).show();
+        }
+    }
 }
