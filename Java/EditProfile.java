@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
@@ -18,6 +19,8 @@ import android.widget.ImageButton;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -26,7 +29,11 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
+import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
@@ -39,10 +46,11 @@ public class EditProfile extends AppCompatActivity {
     private Button saveButton;
     private EditText bioText;
     private RadioGroup yearText;
+    private Bitmap userImage;
     private EditText majorText;
     private String userId;
     private DatabaseReference mDatabase;
-    @SuppressLint("WrongViewCast")
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -65,7 +73,9 @@ public class EditProfile extends AppCompatActivity {
                 FirebaseUser currentFirebaseUser = FirebaseAuth.getInstance().getCurrentUser() ;
                 userId=currentFirebaseUser.getUid();//retrieves current user
                 final DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
-
+                FirebaseStorage storage = FirebaseStorage.getInstance();
+                final StorageReference storageRef = storage.getReference();
+                StorageReference imagesRef = storageRef.child("images");
                 final Query query = rootRef.child("users").orderByChild("userId").equalTo(userId);//finds user in database
                 query.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
@@ -73,7 +83,26 @@ public class EditProfile extends AppCompatActivity {
 
                         for(DataSnapshot ds : dataSnapshot.getChildren()) {
                                 String id = (String) ds.getKey();//retrieves user's id to know where to put info into profile
-                                editUser(id, bio, yearText, major);
+                                StorageReference imagesRef= storageRef.child(id).child("image");
+                                userPic.setDrawingCacheEnabled(true);
+                                userPic.buildDrawingCache();
+                                Bitmap bitmap = ((BitmapDrawable) userPic.getDrawable()).getBitmap();
+                                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+                                byte[] data = baos.toByteArray();
+                                UploadTask uploadTask = imagesRef.putBytes(data);
+                                uploadTask.addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception exception) {
+                                        // Handle unsuccessful uploads
+                                    }
+                                }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                                    @Override
+                                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                        // taskSnapshot.getMetadata() contains file metadata such as size, content-type, etc.
+                                    }
+                                });
+                                    editUser(id, bio, yearText, major);
 
                         }
 
@@ -96,6 +125,7 @@ public class EditProfile extends AppCompatActivity {
                 intent.setType("image/*");
                 intent.setAction(Intent.ACTION_GET_CONTENT);
                 startActivityForResult(Intent.createChooser(intent, "Select Picture"), GALLERY);
+
             }
         });
     }
@@ -123,6 +153,7 @@ public class EditProfile extends AppCompatActivity {
                         rotateImage.recycle();
                     rotateImage = Bitmap.createBitmap(Image, 0, 0, Image.getWidth(), Image.getHeight(), matrix,true);
                     userPic.setImageBitmap(rotateImage);
+                    userImage=Image;
                 } else
                     userPic.setImageBitmap(Image);
             } catch (FileNotFoundException e) {
