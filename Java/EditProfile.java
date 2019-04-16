@@ -5,9 +5,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -18,6 +20,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -44,10 +47,14 @@ public class EditProfile extends AppCompatActivity {
     private static ImageButton userPic;
     private static final int GALLERY = 1;
     private Button saveButton;
-    private EditText bioText;
-    private RadioGroup yearText;
+    private TextView fullName;
+    private EditText bioTextOld;
+    private EditText bioTextNew;
+    private RadioGroup yearTextOld;
+    private RadioGroup yearTextNew;
     private Bitmap userImage;
-    private EditText majorText;
+    private EditText majorTextOld;
+    private EditText majorTextNew;
     private String userId;
     private DatabaseReference mDatabase;
 
@@ -57,19 +64,68 @@ public class EditProfile extends AppCompatActivity {
         setContentView(R.layout.edit_profile);
 
         saveButton = findViewById(R.id.save_button);
-        bioText = findViewById(R.id.bioText);
-        yearText = findViewById(R.id.year);
-        majorText = findViewById(R.id.major);
+        bioTextOld = findViewById(R.id.bioText);
+        yearTextOld = findViewById(R.id.year);
+        majorTextOld = findViewById(R.id.major);
+        bioTextNew = findViewById(R.id.bioText);
+        yearTextNew= findViewById(R.id.year);
+        majorTextNew = findViewById(R.id.major);
         userPic= findViewById(R.id.userPic);
+        fullName=findViewById(R.id.fullName);
+        FirebaseUser currentFirebaseUser = FirebaseAuth.getInstance().getCurrentUser() ;
+        userId=currentFirebaseUser.getUid();//retrieves user id of signed in user
+        final DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
+        Query query = rootRef.child("users").orderByChild("userId").equalTo(userId);//finds the user in the database
 
+        ValueEventListener valueEventListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                String fName="";
+                String lName="";
+                String bio="";
+                String year="";
+                String major="";
+                //retrieves current profile data
+                for(DataSnapshot ds : dataSnapshot.getChildren()) {
+                    fName= (String) ds.child("fName").getValue();//retrieves first name
+                    lName= (String) ds.child("lName").getValue();//retrieves last name
+                    bio= (String) ds.child("bio").getValue();//retrieves bio
+                    year= (String) ds.child("year").getValue();//retrieves year
+                    major= (String) ds.child("major").getValue();//retrieves major
+                }
 
+                fullName.setText(fName+" "+lName);//combines first and last name to create full name
+                bioTextOld.setText(bio);//sets old bio
+                majorTextOld.setText(major);//sets old major
+                if(year.equals("Freshman")) {//checks year to know which to check
+                    ((RadioButton) yearTextOld.getChildAt(1)).setChecked(true);
+                }
+                if(year.equals("Sophmore")) {
+                    ((RadioButton) yearTextOld.getChildAt(2)).setChecked(true);
+                }
+                if(year.equals("Junior")) {
+                    ((RadioButton) yearTextOld.getChildAt(3)).setChecked(true);
+                }
+                if(year.equals("Senior")) {
+                    ((RadioButton) yearTextOld.getChildAt(4)).setChecked(true);
+                }
+                if(year.equals("Graduate")) {
+                    ((RadioButton) yearTextOld.getChildAt(1)).setChecked(true);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+            }
+        };
+        query.addListenerForSingleValueEvent(valueEventListener);
 
         saveButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 RadioGroup rg = (RadioGroup)findViewById(R.id.year);
-                final String yearText = ((RadioButton)findViewById(rg.getCheckedRadioButtonId())).getText().toString();
-                final String bio=bioText.getText().toString();
-                final String major= majorText.getText().toString();
+                final String yearText= ((RadioButton)findViewById(rg.getCheckedRadioButtonId())).getText().toString();
+                final String bio=bioTextNew.getText().toString();
+                final String major= majorTextNew.getText().toString();
                 FirebaseUser currentFirebaseUser = FirebaseAuth.getInstance().getCurrentUser() ;
                 userId=currentFirebaseUser.getUid();//retrieves current user
                 final DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
@@ -102,8 +158,7 @@ public class EditProfile extends AppCompatActivity {
                                         // taskSnapshot.getMetadata() contains file metadata such as size, content-type, etc.
                                     }
                                 });
-                                    editUser(id, bio, yearText, major);
-
+                                editUser(id, bio, yearText, major);
                         }
 
                     }
@@ -113,7 +168,15 @@ public class EditProfile extends AppCompatActivity {
 
                     }
                 });
-                startActivity(new Intent(EditProfile.this, MyProfile.class));
+                final Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        startActivity(new Intent(EditProfile.this, MyProfile.class));
+                    }
+                }, 1000);//delays opening for 1 second to allow firebase to update
+
+
             }
         });
         userPic.setOnClickListener(new View.OnClickListener() {
