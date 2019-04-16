@@ -32,6 +32,22 @@
             app:layout_constraintVertical_bias="0.01999998"
             tools:text="My Profile" />
 
+        <Button
+            android:id="@+id/edit_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="15dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:text="Edit"
+            android:textSize="21dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintHorizontal_bias="0.498"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/bioText"
+            app:layout_constraintVertical_bias="1.0" />
+
         <TextView
             android:id="@+id/bioText"
             android:layout_width="311dp"
@@ -179,7 +195,7 @@
             android:layout_marginEnd="8dp"
             android:layout_marginRight="8dp"
             android:background="@drawable/my_border"
-            app:layout_constraintBottom_toTopOf="@+id/save_button"
+            app:layout_constraintBottom_toTopOf="@+id/edit_button"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/bioWord"
