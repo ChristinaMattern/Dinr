@@ -67,7 +67,7 @@ public class HomeScreen extends AppCompatActivity implements Home_Screen_Adapter
                 }
 
                 greeting = findViewById(R.id.home_screenTV);
-                greeting.setText("Welcome to the Home Screen, " + fName);
+                greeting.setText("Welcome, " + fName);
             }
 
             @Override
