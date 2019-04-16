@@ -1,8 +1,11 @@
 package com.example.dinr;
 
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -26,6 +29,7 @@ public class MyProfile extends AppCompatActivity {
     private TextView bioText;
     private TextView yearText;
     private TextView majorText;
+    private Button editButton;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,6 +38,7 @@ public class MyProfile extends AppCompatActivity {
         bioText = (TextView)findViewById(R.id.bioText);
         yearText = (TextView)findViewById(R.id.yearText);
         majorText = (TextView)findViewById(R.id.majorText);
+        editButton = (Button)findViewById(R.id.edit_button);
         FirebaseUser currentFirebaseUser = FirebaseAuth.getInstance().getCurrentUser() ;
         userId=currentFirebaseUser.getUid();//retrieves user id of signed in user
         final DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
@@ -48,11 +53,11 @@ public class MyProfile extends AppCompatActivity {
                 String year="";
                 String major="";
                 for(DataSnapshot ds : dataSnapshot.getChildren()) {
-                     fName= (String) ds.child("fName").getValue();//retrieves first name
-                     lName= (String) ds.child("lName").getValue();//retrieves last name
-                     bio= (String) ds.child("bio").getValue();//retrieves bio
-                     year= (String) ds.child("year").getValue();//retrieves year
-                     major= (String) ds.child("major").getValue();//retrieves major
+                    fName= (String) ds.child("fName").getValue();//retrieves first name
+                    lName= (String) ds.child("lName").getValue();//retrieves last name
+                    bio= (String) ds.child("bio").getValue();//retrieves bio
+                    year= (String) ds.child("year").getValue();//retrieves year
+                    major= (String) ds.child("major").getValue();//retrieves major
                 }
 
                 fullName.setText(fName+" "+lName);//combines first and last name to create full name
@@ -68,6 +73,13 @@ public class MyProfile extends AppCompatActivity {
             }
         };
         query.addListenerForSingleValueEvent(valueEventListener);
+
+    editButton.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            startActivity(new Intent(MyProfile.this, EditProfile.class));
+        }
+    });
 
     }
 
