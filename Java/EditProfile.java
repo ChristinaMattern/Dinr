@@ -5,22 +5,24 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Handler;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -92,30 +94,49 @@ public class EditProfile extends AppCompatActivity {
                 String major="";
                 //retrieves current profile data
                 for(DataSnapshot ds : dataSnapshot.getChildren()) {
+                    String id = (String) ds.getKey();//retrieves user's id to know where to put info into profile
                     fName= (String) ds.child("fName").getValue();//retrieves first name
                     lName= (String) ds.child("lName").getValue();//retrieves last name
                     bio= (String) ds.child("bio").getValue();//retrieves bio
                     year= (String) ds.child("year").getValue();//retrieves year
                     major= (String) ds.child("major").getValue();//retrieves major
+                    StorageReference storageReference = FirebaseStorage.getInstance().getReference();
+                    StorageReference photoReference= storageReference.child(id).child("image");
+                    userPic = findViewById(R.id.userPic);
+                    final long ONE_MEGABYTE = 1024 * 1024;
+                    photoReference.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+                        @Override
+                        public void onSuccess(byte[] bytes) {
+                            Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                            userPic.setImageBitmap(bmp);
+
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception exception) {
+                            Toast.makeText(getApplicationContext(), "No Such file or Path found!!", Toast.LENGTH_LONG).show();
+                        }
+                    });
+
                 }
 
                 fullName.setText(fName+" "+lName);//combines first and last name to create full name
                 bioTextOld.setText(bio);//sets old bio
                 majorTextOld.setText(major);//sets old major
                 if(year.equals("Freshman")) {//checks year to know which to check
-                    ((RadioButton) yearTextOld.getChildAt(1)).setChecked(true);
+                    ((RadioButton) yearTextOld.getChildAt(0)).setChecked(true);
                 }
                 if(year.equals("Sophmore")) {
-                    ((RadioButton) yearTextOld.getChildAt(2)).setChecked(true);
+                    ((RadioButton) yearTextOld.getChildAt(1)).setChecked(true);
                 }
                 if(year.equals("Junior")) {
-                    ((RadioButton) yearTextOld.getChildAt(3)).setChecked(true);
+                    ((RadioButton) yearTextOld.getChildAt(2)).setChecked(true);
                 }
                 if(year.equals("Senior")) {
-                    ((RadioButton) yearTextOld.getChildAt(4)).setChecked(true);
+                    ((RadioButton) yearTextOld.getChildAt(3)).setChecked(true);
                 }
                 if(year.equals("Graduate")) {
-                    ((RadioButton) yearTextOld.getChildAt(1)).setChecked(true);
+                    ((RadioButton) yearTextOld.getChildAt(4)).setChecked(true);
                 }
             }
 
@@ -143,29 +164,28 @@ public class EditProfile extends AppCompatActivity {
                     public void onDataChange(DataSnapshot dataSnapshot) {
 
                         for(DataSnapshot ds : dataSnapshot.getChildren()) {
-                            String id = (String) ds.getKey();//retrieves user's id to know where to put info into profile
-                            StorageReference imagesRef= storageRef.child(id).child("image");
-                            userPic.setDrawingCacheEnabled(true);
-                            userPic.buildDrawingCache();
-                            Bitmap bitmap = ((BitmapDrawable) userPic.getDrawable()).getBitmap();
-                            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-                            byte[] data = baos.toByteArray();
-                            UploadTask uploadTask = imagesRef.putBytes(data);
-                            uploadTask.addOnFailureListener(new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception exception) {
-                                    // Handle unsuccessful uploads
-                                }
-                            }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                                @Override
-                                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                                    // taskSnapshot.getMetadata() contains file metadata such as size, content-type, etc.
-                                }
-                            });
-                            editUser(id, bio, yearText, major);
+                                String id = (String) ds.getKey();//retrieves user's id to know where to put info into profile
+                                StorageReference imagesRef= storageRef.child(id).child("image");
+                                userPic.setDrawingCacheEnabled(true);
+                                userPic.buildDrawingCache();
+                                Bitmap bitmap = ((BitmapDrawable) userPic.getDrawable()).getBitmap();
+                                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+                                byte[] data = baos.toByteArray();
+                                UploadTask uploadTask = imagesRef.putBytes(data);
+                                uploadTask.addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception exception) {
+                                        // Handle unsuccessful uploads
+                                    }
+                                }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                                    @Override
+                                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                        // taskSnapshot.getMetadata() contains file metadata such as size, content-type, etc.
+                                    }
+                                });
+                                editUser(id, bio, yearText, major);
                         }
-
                     }
 
                     @Override
@@ -249,7 +269,7 @@ public class EditProfile extends AppCompatActivity {
     }
     public boolean onOptionsItemSelected(MenuItem item) {
         firebaseAuth = firebaseAuth.getInstance();
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
             case R.id.Settings:
                 Toast.makeText(EditProfile.this, "Settings", Toast.LENGTH_SHORT).show();
                 return true;

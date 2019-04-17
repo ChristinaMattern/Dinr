@@ -1,16 +1,22 @@
 package com.example.dinr;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
@@ -21,6 +27,11 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+
+import java.io.ByteArrayOutputStream;
 
 public class Register extends AppCompatActivity {
     private DatabaseReference mDatabase;
@@ -29,12 +40,13 @@ public class Register extends AppCompatActivity {
     private EditText newUserFirstName, newUserLastName, studentID, studentEmail, newUserPassword, confirmPassword;
     private TextView missingInfo;
     private FirebaseAuth firebaseAuth;
+    private ImageView userPic;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.register);
-
+        userPic=findViewById(R.id.userPic);
         registerButton = findViewById(R.id.register_button);
         newUserFirstName = findViewById(R.id.first_name);
         newUserLastName = findViewById(R.id.last_name);
@@ -60,6 +72,7 @@ public class Register extends AppCompatActivity {
 
                 mDatabase = FirebaseDatabase.getInstance().getReference().child("users");
                 mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapShot) {
                         if (snapShot.hasChild(id)) {//checks to see if another user has an the same id
@@ -75,6 +88,28 @@ public class Register extends AppCompatActivity {
                                             mDatabase = FirebaseDatabase.getInstance().getReference();
                                             FirebaseUser currentFirebaseUser = FirebaseAuth.getInstance().getCurrentUser() ;
                                             writeNewUser(currentFirebaseUser.getUid(),id, fName, lName, email, password);
+                                            StorageReference storageReference = FirebaseStorage.getInstance().getReference();
+                                            FirebaseStorage storage = FirebaseStorage.getInstance();
+                                            final StorageReference storageRef = storage.getReference();
+                                            StorageReference imagesRef= storageRef.child(id).child("image");
+                                            userPic.setDrawingCacheEnabled(true);
+                                            userPic.buildDrawingCache();
+                                            Bitmap bitmap = ((BitmapDrawable) userPic.getDrawable()).getBitmap();
+                                            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                                            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+                                            byte[] data = baos.toByteArray();
+                                            UploadTask uploadTask = imagesRef.putBytes(data);
+                                            uploadTask.addOnFailureListener(new OnFailureListener() {
+                                                @Override
+                                                public void onFailure(@NonNull Exception exception) {
+                                                    // Handle unsuccessful uploads
+                                                }
+                                            }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                                                @Override
+                                                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                                    // taskSnapshot.getMetadata() contains file metadata such as size, content-type, etc.
+                                                }
+                                            });
                                             Toast.makeText(Register.this, "Registration Successful!", Toast.LENGTH_SHORT).show();
                                             startActivity(new Intent(Register.this, HomeScreen.class));
                                         } else {
@@ -116,6 +151,12 @@ public class Register extends AppCompatActivity {
         mDatabase.child("users").child(id).child("email").setValue(email);
         mDatabase.child("users").child(id).child("password").setValue(password);
         mDatabase.child("users").child(id).child("userId").setValue(userId);
+        mDatabase.child("users").child(id).child("bio").setValue(" ");
+        mDatabase.child("users").child(id).child("major").setValue(" ");
+        mDatabase.child("users").child(id).child("location").setValue(" ");
+        mDatabase.child("users").child(id).child("year").setValue(" ");
+
+
 
     }
 
