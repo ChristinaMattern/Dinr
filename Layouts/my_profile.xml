@@ -79,7 +79,7 @@
             app:layout_constraintStart_toStartOf="parent"
             tools:text="Bio" />
 
-        <TextView
+        <ImageView
             android:id="@+id/userPic"
             android:layout_width="203dp"
             android:layout_height="169dp"
@@ -89,13 +89,11 @@
             android:layout_marginEnd="8dp"
             android:layout_marginRight="8dp"
             android:layout_marginBottom="8dp"
-            android:background="#FFFFFF"
             app:layout_constraintBottom_toTopOf="@+id/bioWord"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/profileView"
-            app:layout_constraintVertical_bias="0.0"
-            tools:text="Suppose to be uploaded image" />
+            app:layout_constraintVertical_bias="0.0" />
 
         <TextView
             android:id="@+id/fullName"

@@ -46,7 +46,7 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/bioText"
-            app:layout_constraintVertical_bias="1.0" />
+            app:layout_constraintVertical_bias="0.0" />
 
         <EditText
             android:id="@+id/bioText"
@@ -84,14 +84,13 @@
 
         <ImageButton
             android:id="@+id/userPic"
-            android:layout_width="113dp"
-            android:layout_height="151dp"
+            android:layout_width="203dp"
+            android:layout_height="169dp"
             android:layout_marginTop="6dp"
             android:paddingStart="24dp"
             android:paddingTop="16dp"
             android:paddingEnd="24dp"
             android:paddingBottom="16dp"
-            android:src="@drawable/default_pic"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/editView" />
