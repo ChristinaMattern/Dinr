@@ -122,7 +122,7 @@ public class HomeScreen extends AppCompatActivity implements Home_Screen_Adapter
                 startActivity(new Intent(this, MyProfile.class));
                 break;
             case 1:
-                startActivity(new Intent(this, EditProfile.class));
+                startActivity(new Intent(this, Canvas.class));
                 break;
             case 2:
                 startActivity(new Intent(this, Faq.class));
