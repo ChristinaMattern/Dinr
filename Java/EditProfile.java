@@ -14,6 +14,9 @@ import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -21,6 +24,7 @@ import android.widget.ImageButton;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -57,6 +61,7 @@ public class EditProfile extends AppCompatActivity {
     private EditText majorTextNew;
     private String userId;
     private DatabaseReference mDatabase;
+    private FirebaseAuth firebaseAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -138,27 +143,27 @@ public class EditProfile extends AppCompatActivity {
                     public void onDataChange(DataSnapshot dataSnapshot) {
 
                         for(DataSnapshot ds : dataSnapshot.getChildren()) {
-                                String id = (String) ds.getKey();//retrieves user's id to know where to put info into profile
-                                StorageReference imagesRef= storageRef.child(id).child("image");
-                                userPic.setDrawingCacheEnabled(true);
-                                userPic.buildDrawingCache();
-                                Bitmap bitmap = ((BitmapDrawable) userPic.getDrawable()).getBitmap();
-                                ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-                                byte[] data = baos.toByteArray();
-                                UploadTask uploadTask = imagesRef.putBytes(data);
-                                uploadTask.addOnFailureListener(new OnFailureListener() {
-                                    @Override
-                                    public void onFailure(@NonNull Exception exception) {
-                                        // Handle unsuccessful uploads
-                                    }
-                                }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                                    @Override
-                                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                                        // taskSnapshot.getMetadata() contains file metadata such as size, content-type, etc.
-                                    }
-                                });
-                                editUser(id, bio, yearText, major);
+                            String id = (String) ds.getKey();//retrieves user's id to know where to put info into profile
+                            StorageReference imagesRef= storageRef.child(id).child("image");
+                            userPic.setDrawingCacheEnabled(true);
+                            userPic.buildDrawingCache();
+                            Bitmap bitmap = ((BitmapDrawable) userPic.getDrawable()).getBitmap();
+                            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+                            byte[] data = baos.toByteArray();
+                            UploadTask uploadTask = imagesRef.putBytes(data);
+                            uploadTask.addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception exception) {
+                                    // Handle unsuccessful uploads
+                                }
+                            }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                                @Override
+                                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                    // taskSnapshot.getMetadata() contains file metadata such as size, content-type, etc.
+                                }
+                            });
+                            editUser(id, bio, yearText, major);
                         }
 
                     }
@@ -235,5 +240,32 @@ public class EditProfile extends AppCompatActivity {
         }
         cursor.moveToFirst();
         return cursor.getInt(0);
+    }
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.my_profile_menu, menu);
+        return true;
+
+    }
+    public boolean onOptionsItemSelected(MenuItem item) {
+        firebaseAuth = firebaseAuth.getInstance();
+        switch (item.getItemId()){
+            case R.id.Settings:
+                Toast.makeText(EditProfile.this, "Settings", Toast.LENGTH_SHORT).show();
+                return true;
+            case R.id.Logout:
+                Toast.makeText(EditProfile.this, "Logging Out...", Toast.LENGTH_SHORT).show();
+                firebaseAuth.signOut();
+                startActivity(new Intent(EditProfile.this, LoginScreen.class));
+                return true;
+            case R.id.Help:
+                startActivity(new Intent(EditProfile.this, Faq.class));
+                return true;
+            case R.id.Home:
+                startActivity(new Intent(EditProfile.this, HomeScreen.class));
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 }
