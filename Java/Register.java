@@ -143,7 +143,6 @@ public class Register extends AppCompatActivity {
 
     //adds user to database
     private void writeNewUser(String userId, String id, String fName, String lName, String email, String password) {
-        User user = new User(id, fName, lName, email, password);
 
         mDatabase.child("users").child(id).setValue(id);
         mDatabase.child("users").child(id).child("fName").setValue(fName);
