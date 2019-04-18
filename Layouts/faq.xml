@@ -29,13 +29,13 @@
 
     <TextView
         android:id="@+id/Q1"
-        android:layout_width="385dp"
+        android:layout_width="340dp"
         android:layout_height="77dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginLeft="24dp"
         android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginRight="24dp"
         android:layout_marginBottom="8dp"
         android:text="@string/Question1"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -48,13 +48,13 @@
 
     <TextView
         android:id="@+id/Q2"
-        android:layout_width="385dp"
+        android:layout_width="340dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginLeft="24dp"
         android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginRight="24dp"
         android:layout_marginBottom="8dp"
         android:text="@string/Question2"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -67,13 +67,13 @@
 
     <TextView
         android:id="@+id/Q3"
-        android:layout_width="385dp"
+        android:layout_width="340dp"
         android:layout_height="152dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginLeft="24dp"
         android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginRight="24dp"
         android:layout_marginBottom="8dp"
         android:text="@string/Question3"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -82,6 +82,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/Q2"
         app:layout_constraintVertical_bias="0.060000002"
-        tools:text="@string/Question3"/>
+        tools:text="@string/Question3" />
 
 </android.support.constraint.ConstraintLayout>
