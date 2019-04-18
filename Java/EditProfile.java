@@ -19,12 +19,14 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -64,12 +66,12 @@ public class EditProfile extends AppCompatActivity {
     private String userId;
     private DatabaseReference mDatabase;
     private FirebaseAuth firebaseAuth;
+    private Spinner dropdown;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.edit_profile);
-
         saveButton = findViewById(R.id.save_button);
         bioTextOld = findViewById(R.id.bioText);
         yearTextOld = findViewById(R.id.year);
@@ -83,6 +85,15 @@ public class EditProfile extends AppCompatActivity {
         userId=currentFirebaseUser.getUid();//retrieves user id of signed in user
         final DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
         Query query = rootRef.child("users").orderByChild("userId").equalTo(userId);//finds the user in the database
+        //get the spinner from the xml.
+        dropdown = findViewById(R.id.location);
+        //create a list of items for the spinner.
+        String[] items = new String[]{"Offline","Dining Hall", "Camelot Room", "Brubacher Cafe", "Starbucks", "Lally Cafe"};
+        //create an adapter to describe how the items are displayed, adapters are used in several places in android.
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, items);
+        //set the spinners adapter to the previously created one.
+        dropdown.setAdapter(adapter);
+
 
         ValueEventListener valueEventListener = new ValueEventListener() {
             @Override
@@ -152,6 +163,7 @@ public class EditProfile extends AppCompatActivity {
                 final String yearText= ((RadioButton)findViewById(rg.getCheckedRadioButtonId())).getText().toString();
                 final String bio=bioTextNew.getText().toString();
                 final String major= majorTextNew.getText().toString();
+                final String location = dropdown.getSelectedItem().toString();
                 FirebaseUser currentFirebaseUser = FirebaseAuth.getInstance().getCurrentUser() ;
                 userId=currentFirebaseUser.getUid();//retrieves current user
                 final DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
@@ -184,7 +196,7 @@ public class EditProfile extends AppCompatActivity {
                                         // taskSnapshot.getMetadata() contains file metadata such as size, content-type, etc.
                                     }
                                 });
-                                editUser(id, bio, yearText, major);
+                                editUser(id, bio, yearText, major, location);
                         }
                     }
 
@@ -219,13 +231,15 @@ public class EditProfile extends AppCompatActivity {
     }
 
     //adds user's profile to database
-    private void editUser(String id, String bio, String year, String major) {
+    private void editUser(String id, String bio, String year, String major, String location) {
         mDatabase = FirebaseDatabase.getInstance().getReference().child("users").child(id).child("bio");
         mDatabase.setValue(bio);
         mDatabase = FirebaseDatabase.getInstance().getReference().child("users").child(id).child("year");
         mDatabase.setValue(year);
         mDatabase = FirebaseDatabase.getInstance().getReference().child("users").child(id).child("major");
         mDatabase.setValue(major);
+        mDatabase = FirebaseDatabase.getInstance().getReference().child("users").child(id).child("location");
+        mDatabase.setValue(location);
         return;
     }
 

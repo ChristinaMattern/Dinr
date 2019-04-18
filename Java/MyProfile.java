@@ -1,4 +1,6 @@
 package com.example.dinr;
+/*@author Nola Smtih
+@date 4/17/2019 */
 
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -10,9 +12,12 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -39,6 +44,7 @@ public class MyProfile extends AppCompatActivity {
     private Button editButton;
     private ImageView userPic;
     private FirebaseAuth firebaseAuth;
+    private TextView locationText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +55,7 @@ public class MyProfile extends AppCompatActivity {
         yearText = (TextView)findViewById(R.id.yearText);
         majorText = (TextView)findViewById(R.id.majorText);
         editButton = (Button)findViewById(R.id.edit_button);
+        locationText = (TextView) findViewById(R.id.locationText);
         FirebaseUser currentFirebaseUser = FirebaseAuth.getInstance().getCurrentUser() ;
         userId=currentFirebaseUser.getUid();//retrieves user id of signed in user
         final DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
@@ -58,11 +65,12 @@ public class MyProfile extends AppCompatActivity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
-                String fName="";
-                String lName="";
-                String bio="";
-                String year="";
-                String major="";
+                String fName=" ";
+                String lName=" ";
+                String bio=" ";
+                String year=" ";
+                String major=" ";
+                String location=" ";
                 for(DataSnapshot ds : dataSnapshot.getChildren()) {
                     String id = (String) ds.getKey();//retrieves user's id to know where to put info into profile
                     fName= (String) ds.child("fName").getValue();//retrieves first name
@@ -70,6 +78,7 @@ public class MyProfile extends AppCompatActivity {
                     bio= (String) ds.child("bio").getValue();//retrieves bio
                     year= (String) ds.child("year").getValue();//retrieves year
                     major= (String) ds.child("major").getValue();//retrieves major
+                    location=(String) ds.child("location").getValue();
                     StorageReference storageReference = FirebaseStorage.getInstance().getReference();
                     StorageReference photoReference= storageReference.child(id).child("image");
                     userPic = (ImageView)findViewById(R.id.userPic);
@@ -93,6 +102,7 @@ public class MyProfile extends AppCompatActivity {
                 bioText.setText(bio);//sets bio
                 yearText.setText(year);//sets year
                 majorText.setText(major);//sets major
+                locationText.setText(location);//sets location
 
 
             }
@@ -113,6 +123,7 @@ public class MyProfile extends AppCompatActivity {
         });
 
     }
+
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.my_profile_menu, menu);
