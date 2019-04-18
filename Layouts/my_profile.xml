@@ -184,6 +184,39 @@
             app:layout_constraintVertical_bias="0.3" />
 
         <TextView
+            android:id="@+id/locationWord"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+            android:text="Location"
+            app:layout_constraintBottom_toTopOf="@+id/bioWord"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.58"
+            app:layout_constraintStart_toEndOf="@+id/yearWord"
+            app:layout_constraintTop_toBottomOf="@+id/fullName"
+            app:layout_constraintVertical_bias="0.49" />
+
+        <TextView
+            android:id="@+id/locationText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+            android:text="location"
+            app:layout_constraintBottom_toTopOf="@+id/bioWord"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/majorText"
+            app:layout_constraintTop_toBottomOf="@+id/locationWord"
+            app:layout_constraintVertical_bias="0.07999998" />
+
+        <TextView
             android:id="@+id/border"
             android:layout_width="319dp"
             android:layout_height="272dp"
