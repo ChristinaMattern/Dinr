@@ -1,1 +1,11 @@
+<resources>
+    <string name="app_name">DINR</string>
+    <string name="Question2">2. How do I let others know I am currently waiting to meet others?\n
+In edit profile beneath your major there is a location list where you can choose where you are	currently located or if you are offline, so when others click on your profile they will see and you will appear in the search in that location and if you are waiting.
+</string>
+    <string name="Question3">3. My app keeps logging me out if I close it. How do I stay logged in?\n
+        Go to the settings and choose the option to stay logged in.</string>
 
+    <string name="Question1">1.How do I change my profile picture?\n  Go to edit your profile and click on the picture and you will be asked to select a photo from your library.</string>
+
+</resources>
