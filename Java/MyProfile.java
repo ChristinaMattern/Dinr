@@ -158,7 +158,7 @@ public class MyProfile extends AppCompatActivity {
         firebaseAuth = firebaseAuth.getInstance();
         switch (item.getItemId()){
             case R.id.Settings:
-                Toast.makeText(MyProfile.this, "Settings", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(MyProfile.this, Settings.class));
                 return true;
             case R.id.Logout:
                 Toast.makeText(MyProfile.this, "Logging Out...", Toast.LENGTH_SHORT).show();

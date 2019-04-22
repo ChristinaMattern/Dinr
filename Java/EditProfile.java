@@ -269,7 +269,7 @@ public class EditProfile extends AppCompatActivity {
         firebaseAuth = firebaseAuth.getInstance();
         switch (item.getItemId()) {
             case R.id.Settings:
-                Toast.makeText(EditProfile.this, "Settings", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(EditProfile.this, Settings.class));
                 return true;
             case R.id.Logout:
                 Toast.makeText(EditProfile.this, "Logging Out...", Toast.LENGTH_SHORT).show();
