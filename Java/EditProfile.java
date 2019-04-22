@@ -1,12 +1,10 @@
 package com.example.dinr;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
@@ -19,14 +17,11 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -66,7 +61,7 @@ public class EditProfile extends AppCompatActivity {
     private String userId;
     private DatabaseReference mDatabase;
     private FirebaseAuth firebaseAuth;
-    private Spinner dropdown;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,15 +80,6 @@ public class EditProfile extends AppCompatActivity {
         userId=currentFirebaseUser.getUid();//retrieves user id of signed in user
         final DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
         Query query = rootRef.child("users").orderByChild("userId").equalTo(userId);//finds the user in the database
-        //get the spinner from the xml.
-        dropdown = findViewById(R.id.location);
-        //create a list of items for the spinner.
-        String[] items = new String[]{"Offline","Dining Hall", "Camelot Room", "Brubacher Cafe", "Starbucks", "Lally Cafe"};
-        //create an adapter to describe how the items are displayed, adapters are used in several places in android.
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, items);
-        //set the spinners adapter to the previously created one.
-        dropdown.setAdapter(adapter);
-
 
         ValueEventListener valueEventListener = new ValueEventListener() {
             @Override
@@ -111,6 +97,7 @@ public class EditProfile extends AppCompatActivity {
                     bio= (String) ds.child("bio").getValue();//retrieves bio
                     year= (String) ds.child("year").getValue();//retrieves year
                     major= (String) ds.child("major").getValue();//retrieves major
+                    //retrieves user's picture
                     StorageReference storageReference = FirebaseStorage.getInstance().getReference();
                     StorageReference photoReference= storageReference.child(id).child("image");
                     userPic = findViewById(R.id.userPic);
@@ -163,7 +150,6 @@ public class EditProfile extends AppCompatActivity {
                 final String yearText= ((RadioButton)findViewById(rg.getCheckedRadioButtonId())).getText().toString();
                 final String bio=bioTextNew.getText().toString();
                 final String major= majorTextNew.getText().toString();
-                final String location = dropdown.getSelectedItem().toString();
                 FirebaseUser currentFirebaseUser = FirebaseAuth.getInstance().getCurrentUser() ;
                 userId=currentFirebaseUser.getUid();//retrieves current user
                 final DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
@@ -174,7 +160,7 @@ public class EditProfile extends AppCompatActivity {
                 query.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
-
+                        //edits the user's profile
                         for(DataSnapshot ds : dataSnapshot.getChildren()) {
                                 String id = (String) ds.getKey();//retrieves user's id to know where to put info into profile
                                 StorageReference imagesRef= storageRef.child(id).child("image");
@@ -196,7 +182,7 @@ public class EditProfile extends AppCompatActivity {
                                         // taskSnapshot.getMetadata() contains file metadata such as size, content-type, etc.
                                     }
                                 });
-                                editUser(id, bio, yearText, major, location);
+                                editUser(id, bio, yearText, major);
                         }
                     }
 
@@ -231,15 +217,13 @@ public class EditProfile extends AppCompatActivity {
     }
 
     //adds user's profile to database
-    private void editUser(String id, String bio, String year, String major, String location) {
+    private void editUser(String id, String bio, String year, String major) {
         mDatabase = FirebaseDatabase.getInstance().getReference().child("users").child(id).child("bio");
         mDatabase.setValue(bio);
         mDatabase = FirebaseDatabase.getInstance().getReference().child("users").child(id).child("year");
         mDatabase.setValue(year);
         mDatabase = FirebaseDatabase.getInstance().getReference().child("users").child(id).child("major");
         mDatabase.setValue(major);
-        mDatabase = FirebaseDatabase.getInstance().getReference().child("users").child(id).child("location");
-        mDatabase.setValue(location);
         return;
     }
 
