@@ -1,4 +1,3 @@
-# SoftwareEngineeringProject
 # Dinr
 
 Dinr is a mobile application for Android devices. The purpose of the application is to enocurage social interaction on campus and
