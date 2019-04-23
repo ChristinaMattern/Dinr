@@ -46,8 +46,8 @@ public class HomeScreen extends AppCompatActivity implements Home_Screen_Adapter
 
         RecyclerView recyclerView = findViewById(R.id.rv_list);
         List<item> mList = new ArrayList<>();
-        mList.add(new item(R.drawable.cafe,"Go to Dining Options"));
-        mList.add(new item(R.drawable.search, "Go to Canvas"));
+        mList.add(new item(R.drawable.cafe,"Dining Options"));
+        mList.add(new item(R.drawable.search, "Canvas"));
         mList.add(new item(R.drawable.friends,"Find Friends"));
         Home_Screen_Adapter adapter = new Home_Screen_Adapter(HomeScreen.this, mList, this);
         recyclerView.setAdapter(adapter);
