@@ -42,7 +42,6 @@ public class MyProfile extends AppCompatActivity {
     private Button editButton;
     private ImageView userPic;
     private FirebaseAuth firebaseAuth;
-    private TextView locationText;
     private Spinner dropdown;
 
     @Override
@@ -54,7 +53,6 @@ public class MyProfile extends AppCompatActivity {
         yearText = (TextView)findViewById(R.id.yearText);
         majorText = (TextView)findViewById(R.id.majorText);
         editButton = (Button)findViewById(R.id.edit_button);
-        locationText = (TextView) findViewById(R.id.locationText);
         dropdown = findViewById(R.id.location);
         FirebaseUser currentFirebaseUser = FirebaseAuth.getInstance().getCurrentUser() ;
         userId=currentFirebaseUser.getUid();//retrieves user id of signed in user
