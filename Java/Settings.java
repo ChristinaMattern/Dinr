@@ -85,7 +85,7 @@ public class Settings extends AppCompatActivity implements AdapterView.OnItemSel
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.home_screen_menu, menu);
+        inflater.inflate(R.menu.settings_menu, menu);
         return true;
 
     }
