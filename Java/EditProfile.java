@@ -197,7 +197,7 @@ public class EditProfile extends AppCompatActivity {
                     public void run() {
                         startActivity(new Intent(EditProfile.this, MyProfile.class));
                     }
-                }, 1000);//delays opening for 1 second to allow firebase to update
+                }, 2000);//delays opening for 1 second to allow firebase to update
 
 
             }
@@ -261,7 +261,7 @@ public class EditProfile extends AppCompatActivity {
     }
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.edit_profile_menu, menu);
+        inflater.inflate(R.menu.my_profile_menu, menu);
         return true;
 
     }
