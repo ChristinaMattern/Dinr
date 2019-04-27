@@ -6,15 +6,23 @@ package com.example.dinr;
  * This is the Canvas page
  */
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.Toast;
+
+import com.google.firebase.auth.FirebaseAuth;
 
 public class Canvas1 extends AppCompatActivity {
 
     private WebView webView;
+    private FirebaseAuth firebaseAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +45,42 @@ public class Canvas1 extends AppCompatActivity {
             webView.goBack();
         } else {
             super.onBackPressed();
+        }
+    }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.canvas_menu, menu);
+        return true;
+
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        firebaseAuth = firebaseAuth.getInstance();
+        switch (item.getItemId()){
+            case R.id.Settings:
+                startActivity(new Intent(Canvas1.this, Settings.class));
+                return true;
+            case R.id.Logout:
+                Toast.makeText(Canvas1.this, "Logging Out...", Toast.LENGTH_SHORT).show();
+                firebaseAuth.signOut();
+                startActivity(new Intent(Canvas1.this, LoginScreen.class));
+                return true;
+            case R.id.Help:
+                startActivity(new Intent(Canvas1.this, Faq.class));
+                return true;
+            case R.id.MyProfile:
+                startActivity(new Intent(Canvas1.this, MyProfile.class));
+                return true;
+            case R.id.EditProfile:
+                startActivity(new Intent(Canvas1.this, EditProfile.class));
+                return true;
+            case R.id.Home:
+                startActivity(new Intent(Canvas1.this, HomeScreen.class));
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
     }
 }
