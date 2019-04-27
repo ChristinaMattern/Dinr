@@ -152,7 +152,7 @@ public class Register extends AppCompatActivity {
         mDatabase.child("users").child(id).child("userId").setValue(userId);
         mDatabase.child("users").child(id).child("bio").setValue(" ");
         mDatabase.child("users").child(id).child("major").setValue(" ");
-        mDatabase.child("users").child(id).child("location").setValue(" ");
+        mDatabase.child("users").child(id).child("location").setValue("offline ");
         mDatabase.child("users").child(id).child("year").setValue(" ");
 
 
