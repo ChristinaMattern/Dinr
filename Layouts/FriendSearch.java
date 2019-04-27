@@ -81,7 +81,7 @@ public class FriendSearch extends AppCompatActivity {
                         return new User(snapshot.child("fName").getValue().toString()
                                 ,snapshot.child("major").getValue().toString()
                                 ,snapshot.child("location").getValue().toString()
-                                ,snapshot.child("year").getValue().toString(),snapshot.getKey());}}).build();
+                                ,snapshot.child("year").getValue().toString(),snapshot.child("userID").getValue().toString());}}).build();
 
         adapter = new FirebaseRecyclerAdapter<User, ViewHolder>(options) {
 
@@ -124,7 +124,7 @@ public class FriendSearch extends AppCompatActivity {
                                 return new User(snapshot.child("fName").getValue().toString()
                                         ,snapshot.child("major").getValue().toString()
                                 ,snapshot.child("location").getValue().toString()
-                                ,snapshot.child("year").getValue().toString(),snapshot.getKey());}}).build();
+                                ,snapshot.child("year").getValue().toString(),snapshot.child("userID").getValue().toString());}}).build();
 
         adapter = new FirebaseRecyclerAdapter<User, ViewHolder>(options) {
 
