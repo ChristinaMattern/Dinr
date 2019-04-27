@@ -26,7 +26,7 @@ public class Faq extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.home_screen_menu, menu);
+        inflater.inflate(R.menu.faq_menu, menu);
         return true;
 
     }
