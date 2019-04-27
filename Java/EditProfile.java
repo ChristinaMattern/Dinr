@@ -261,7 +261,7 @@ public class EditProfile extends AppCompatActivity {
     }
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.my_profile_menu, menu);
+        inflater.inflate(R.menu.edit_profile_menu, menu);
         return true;
 
     }
