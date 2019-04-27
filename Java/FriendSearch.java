@@ -1,6 +1,9 @@
 package com.example.dinr;
 /*@author Nola Smtih
 @date 4/25/2019 */
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -26,14 +29,8 @@ public class FriendSearch extends AppCompatActivity {
 
     private EditText mSearchField;
     private ImageButton mSearchBtn;
-
     private RecyclerView mResultList;
-    private TextView major;
-    private TextView location;
-    private TextView year;
-    private TextView name;
     private DatabaseReference mUserDatabase;
-
     private LinearLayoutManager linearLayoutManager;
     private FirebaseRecyclerAdapter adapter;
 
@@ -71,27 +68,31 @@ public class FriendSearch extends AppCompatActivity {
         Query query = FirebaseDatabase.getInstance()
                 .getReference()
                 .child("users").child("id")
-                .orderByChild("searchText").equalTo(searchText);
+                .orderByChild("searchText").equalTo(searchText);//tells firebase where to begin retrieving user data based on searched text
 
         FirebaseRecyclerOptions<User> options = new FirebaseRecyclerOptions.Builder<User>()
                 .setQuery(query, new SnapshotParser<User>() {
                     @NonNull
                     @Override
-                    public User parseSnapshot(@NonNull DataSnapshot snapshot) {
+                    public User parseSnapshot(@NonNull DataSnapshot snapshot) {//puts user data in user class
                         return new User(snapshot.child("fName").getValue().toString()
                                 ,snapshot.child("major").getValue().toString()
                                 ,snapshot.child("location").getValue().toString()
-                                ,snapshot.child("year").getValue().toString(),snapshot.child("userID").getValue().toString());}}).build();
+                                ,snapshot.child("year").getValue().toString(),snapshot.child("userId").getValue().toString());}}).build();
 
         adapter = new FirebaseRecyclerAdapter<User, ViewHolder>(options) {
 
             @Override
-            protected void onBindViewHolder(@NonNull ViewHolder holder, final int position, User model) {
+            protected void onBindViewHolder(@NonNull ViewHolder holder, final int position, final User model) {
                 holder.setTxtName(model.getName(),model.getMajor(),model.getLocation(),model.getYear());
                 holder.root.setOnClickListener(new View.OnClickListener() {
                     @Override
-                    public void onClick(View view) {
-                        Toast.makeText(FriendSearch.this, String.valueOf(position), Toast.LENGTH_SHORT).show();
+                    public void onClick(View view) {//saves user id that is clicked on to a shared preference file to retrieve on otherprofile
+                        SharedPreferences sharedPref= getSharedPreferences("OtherId", Context.MODE_PRIVATE);
+                        SharedPreferences.Editor editor=sharedPref.edit();
+                        editor.putString("id",model.getOtherID().toString());
+                        editor.apply();
+                        startActivity(new Intent(FriendSearch.this, OtherProfile.class));
                     }
                 });
             }
@@ -106,35 +107,39 @@ public class FriendSearch extends AppCompatActivity {
         };
         mResultList.setAdapter(adapter);
 
-
     }
-
 
     private void fetch() {
         Query query = FirebaseDatabase.getInstance()
                 .getReference()
                 .child("users")
-                .orderByChild("id");
+                .orderByChild("id");//tells firebase where to begin retrieving user data
 
         FirebaseRecyclerOptions<User> options = new FirebaseRecyclerOptions.Builder<User>()
                 .setQuery(query, new SnapshotParser<User>() {
                             @NonNull
                             @Override
-                            public User parseSnapshot(@NonNull DataSnapshot snapshot) {
+                            public User parseSnapshot(@NonNull DataSnapshot snapshot) {//puts user data in user class
                                 return new User(snapshot.child("fName").getValue().toString()
                                         ,snapshot.child("major").getValue().toString()
                                 ,snapshot.child("location").getValue().toString()
-                                ,snapshot.child("year").getValue().toString(),snapshot.child("userID").getValue().toString());}}).build();
+                                ,snapshot.child("year").getValue().toString(),snapshot.child("userId").getValue().toString());}}).build();
 
         adapter = new FirebaseRecyclerAdapter<User, ViewHolder>(options) {
 
             @Override
-            protected void onBindViewHolder(@NonNull ViewHolder holder, final int position, User model) {
+            protected void onBindViewHolder(@NonNull ViewHolder holder, final int position, final User model) {
                 holder.setTxtName(model.getName(),model.getMajor(),model.getLocation(),model.getYear());
                 holder.root.setOnClickListener(new View.OnClickListener() {
                     @Override
-                    public void onClick(View view) {
+                    public void onClick(View view) {//saves user id that is clicked on to a shared preference file to retrieve on otherprofile
                         Toast.makeText(FriendSearch.this, String.valueOf(position), Toast.LENGTH_SHORT).show();
+                        SharedPreferences sharedPref= getSharedPreferences("OtherId", Context.MODE_PRIVATE);
+                        SharedPreferences.Editor editor=sharedPref.edit();
+                        editor.putString("id",model.getOtherID().toString());
+                        editor.apply();
+                        startActivity(new Intent(FriendSearch.this, OtherProfile.class));
+
                     }
                 });
             }
@@ -172,7 +177,6 @@ public class FriendSearch extends AppCompatActivity {
             location.setText(string3);
             year.setText(string4);
         }
-
     }
 
     @Override
@@ -186,4 +190,5 @@ public class FriendSearch extends AppCompatActivity {
         super.onStop();
         adapter.stopListening();
     }
+
 }
