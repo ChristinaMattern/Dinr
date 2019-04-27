@@ -53,7 +53,7 @@ public class MyProfile extends AppCompatActivity {
         yearText = (TextView)findViewById(R.id.yearText);
         majorText = (TextView)findViewById(R.id.majorText);
         editButton = (Button)findViewById(R.id.edit_button);
-        dropdown = findViewById(R.id.location);
+        dropdown = findViewById(R.id.locationWord);
         FirebaseUser currentFirebaseUser = FirebaseAuth.getInstance().getCurrentUser() ;
         userId=currentFirebaseUser.getUid();//retrieves user id of signed in user
         final DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
@@ -82,7 +82,7 @@ public class MyProfile extends AppCompatActivity {
                     StorageReference storageReference = FirebaseStorage.getInstance().getReference();
                     StorageReference photoReference= storageReference.child(id).child("image");
                     userPic = (ImageView)findViewById(R.id.userPic);
-                    final long ONE_MEGABYTE = 1024 * 1024;
+                    final long ONE_MEGABYTE = 3000 * 3000;
                     photoReference.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
                         @Override
                         public void onSuccess(byte[] bytes) {
