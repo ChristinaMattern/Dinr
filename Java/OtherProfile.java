@@ -43,7 +43,6 @@ public class OtherProfile extends AppCompatActivity {
     private TextView bioText;
     private TextView yearText;
     private TextView majorText;
-    private Button editButton;
     private ImageView userPic;
     private TextView locationText;
 
@@ -55,8 +54,8 @@ public class OtherProfile extends AppCompatActivity {
         bioText = (TextView)findViewById(R.id.bioText);
         yearText = (TextView)findViewById(R.id.yearText);
         majorText = (TextView)findViewById(R.id.majorText);
-        editButton = (Button)findViewById(R.id.edit_button);
-        locationText = (TextView) findViewById(R.id.locationText);
+        locationText=(TextView)findViewById(R.id.location);
+
         SharedPreferences sharedPref=getSharedPreferences("OtherId", Context.MODE_PRIVATE);
         userId=sharedPref.getString("id","");
         final DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
@@ -83,7 +82,7 @@ public class OtherProfile extends AppCompatActivity {
                     StorageReference storageReference = FirebaseStorage.getInstance().getReference();
                     StorageReference photoReference= storageReference.child(id).child("image");
                     userPic = (ImageView)findViewById(R.id.userPic);
-                    final long ONE_MEGABYTE = 1024 * 1024;
+                    final long ONE_MEGABYTE = 3000 * 3000;
                     photoReference.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
                         @Override
                         public void onSuccess(byte[] bytes) {
@@ -104,8 +103,6 @@ public class OtherProfile extends AppCompatActivity {
                 yearText.setText(year);//sets year
                 majorText.setText(major);//sets major
                 locationText.setText(location);//sets location
-
-
             }
 
             @Override
@@ -115,12 +112,6 @@ public class OtherProfile extends AppCompatActivity {
         };
         query.addListenerForSingleValueEvent(valueEventListener);
 
-        editButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(OtherProfile.this, EditProfile.class));
-            }
-        });
 
     }
 }
