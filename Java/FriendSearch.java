@@ -87,8 +87,9 @@ public class FriendSearch extends AppCompatActivity {
         adapter = new FirebaseRecyclerAdapter<User, ViewHolder>(options) {
             @Override
             protected void onBindViewHolder(@NonNull ViewHolder holder, int position, @NonNull final User model) {
+                String fullName=model.getfName()+ " "+model.getlName();
 
-                holder.setTxtName(model.getfName(),model.getMajor(),model.getLocation(),model.getYear());
+                holder.setTxtName(fullName,model.getMajor(),model.getLocation(),model.getYear());
 
                 holder.root.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -132,13 +133,15 @@ public class FriendSearch extends AppCompatActivity {
                                 return new User(snapshot.child("fName").getValue().toString()
                                         ,snapshot.child("major").getValue().toString()
                                 ,snapshot.child("location").getValue().toString()
-                                ,snapshot.child("year").getValue().toString(),snapshot.child("userId").getValue().toString());}}).build();
+                                ,snapshot.child("year").getValue().toString(),snapshot.child("userId").getValue().toString(),
+                                        snapshot.child("lName").getValue().toString());}}).build();
 
         adapter = new FirebaseRecyclerAdapter<User, ViewHolder>(options) {
 
             @Override
             protected void onBindViewHolder(@NonNull ViewHolder holder, final int position, final User model) {
-                holder.setTxtName(model.getfName(),model.getMajor(),model.getLocation(),model.getYear());
+                String fullName=model.getfName()+ " "+model.getlName();
+                holder.setTxtName(fullName,model.getMajor(),model.getLocation(),model.getYear());
                 holder.root.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {//saves user id that is clicked on to a shared preference file to retrieve on otherprofile
