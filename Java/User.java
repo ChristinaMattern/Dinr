@@ -3,31 +3,31 @@ package com.example.dinr;
 @date 4/25/2019 */
 public class User {
 
-    public String name;
+    public String fName;
     public String major;
     public String location;
     public String year;
-    public String otherID;
+    public String userId;
 
     public User(){
 
     }
 
-    public String getName() {
+    public String getfName() {
 
-        return name;
+        return fName;
     }
 
-    public void setName(String name) {
+    public void setName(String fName) {
 
-        this.name = name;
+        this.fName = fName;
     }
     public String getMajor() {
 
         return major;
     }
 
-    public void setMajor(String Major) {
+    public void setMajor(String major) {
 
         this.major = major;
     }
@@ -50,22 +50,22 @@ public class User {
         this.year = year;
     }
 
-    public String getOtherID() {
+    public String getUserId() {
 
-        return otherID;
+        return userId;
     }
 
-    public void setOtherID(String otherID) {
+    public void setOtherID(String userId) {
 
-        this.otherID= otherID;
+        this.userId= userId;
     }
 
-    public User(String name,String major, String location, String year, String otherID) {
-        this.name = name;
+    public User(String fName,String major, String location, String year, String userId) {
+        this.fName = fName;
         this.year=year;
         this.location=location;
         this.major=major;
-        this.otherID=otherID;
+        this.userId=userId;
 
     }
 }

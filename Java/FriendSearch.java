@@ -1,6 +1,7 @@
 package com.example.dinr;
 /*@author Nola Smtih
 @date 4/25/2019 */
+import android.app.Notification;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -20,10 +21,17 @@ import android.widget.Toast;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.firebase.ui.database.SnapshotParser;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 public class FriendSearch extends AppCompatActivity {
 
@@ -33,6 +41,7 @@ public class FriendSearch extends AppCompatActivity {
     private DatabaseReference mUserDatabase;
     private LinearLayoutManager linearLayoutManager;
     private FirebaseRecyclerAdapter adapter;
+    private FirebaseRecyclerAdapter adapter2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,46 +74,46 @@ public class FriendSearch extends AppCompatActivity {
 
     private void firebaseUserSearch(String searchText) {
 
-        Query query = FirebaseDatabase.getInstance()
-                .getReference()
-                .child("users").child("id")
-                .orderByChild("searchText").equalTo(searchText);//tells firebase where to begin retrieving user data based on searched text
+        final DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
+        Query query = rootRef.child("users").orderByChild("fName").equalTo(searchText);
+                //tells firebase where to begin retrieving user data
 
-        FirebaseRecyclerOptions<User> options = new FirebaseRecyclerOptions.Builder<User>()
-                .setQuery(query, new SnapshotParser<User>() {
-                    @NonNull
-                    @Override
-                    public User parseSnapshot(@NonNull DataSnapshot snapshot) {//puts user data in user class
-                        return new User(snapshot.child("fName").getValue().toString()
-                                ,snapshot.child("major").getValue().toString()
-                                ,snapshot.child("location").getValue().toString()
-                                ,snapshot.child("year").getValue().toString(),snapshot.child("userId").getValue().toString());}}).build();
+        FirebaseRecyclerOptions<User> options =
+                new FirebaseRecyclerOptions.Builder<User>()
+                        .setQuery(query, User.class)
+                        .setLifecycleOwner(this)
+                        .build();
 
         adapter = new FirebaseRecyclerAdapter<User, ViewHolder>(options) {
-
             @Override
-            protected void onBindViewHolder(@NonNull ViewHolder holder, final int position, final User model) {
-                holder.setTxtName(model.getName(),model.getMajor(),model.getLocation(),model.getYear());
+            protected void onBindViewHolder(@NonNull ViewHolder holder, int position, @NonNull final User model) {
+
+                holder.setTxtName(model.getfName(),model.getMajor(),model.getLocation(),model.getYear());
+
                 holder.root.setOnClickListener(new View.OnClickListener() {
                     @Override
-                    public void onClick(View view) {//saves user id that is clicked on to a shared preference file to retrieve on otherprofile
-                        SharedPreferences sharedPref= getSharedPreferences("OtherId", Context.MODE_PRIVATE);
-                        SharedPreferences.Editor editor=sharedPref.edit();
-                        editor.putString("id",model.getOtherID().toString());
-                        editor.apply();
-                        startActivity(new Intent(FriendSearch.this, OtherProfile.class));
+                    public void onClick(View view) {
+
+                            SharedPreferences sharedPref= getSharedPreferences("OtherId", Context.MODE_PRIVATE);
+                            SharedPreferences.Editor editor=sharedPref.edit();
+                            editor.putString("id",model.getUserId().toString());
+                            editor.apply();
+                            startActivity(new Intent(FriendSearch.this, OtherProfile.class));
+
+
                     }
                 });
             }
 
+            @NonNull
             @Override
             public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
                 View view = LayoutInflater.from(parent.getContext())
                         .inflate(R.layout.friend_search_card, parent, false);
                 return new ViewHolder(view);
             }
-
         };
+
         mResultList.setAdapter(adapter);
 
     }
@@ -129,14 +138,14 @@ public class FriendSearch extends AppCompatActivity {
 
             @Override
             protected void onBindViewHolder(@NonNull ViewHolder holder, final int position, final User model) {
-                holder.setTxtName(model.getName(),model.getMajor(),model.getLocation(),model.getYear());
+                holder.setTxtName(model.getfName(),model.getMajor(),model.getLocation(),model.getYear());
                 holder.root.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {//saves user id that is clicked on to a shared preference file to retrieve on otherprofile
                         Toast.makeText(FriendSearch.this, String.valueOf(position), Toast.LENGTH_SHORT).show();
                         SharedPreferences sharedPref= getSharedPreferences("OtherId", Context.MODE_PRIVATE);
                         SharedPreferences.Editor editor=sharedPref.edit();
-                        editor.putString("id",model.getOtherID().toString());
+                        editor.putString("id",model.getUserId().toString());
                         editor.apply();
                         startActivity(new Intent(FriendSearch.this, OtherProfile.class));
 
@@ -190,5 +199,4 @@ public class FriendSearch extends AppCompatActivity {
         super.onStop();
         adapter.stopListening();
     }
-
 }
