@@ -1,7 +1,6 @@
 package com.example.dinr;
 /*@author Nola Smtih
 @date 4/25/2019 */
-import android.app.Notification;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -21,17 +20,10 @@ import android.widget.Toast;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.firebase.ui.database.SnapshotParser;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
-import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
 
 public class FriendSearch extends AppCompatActivity {
 
@@ -57,11 +49,10 @@ public class FriendSearch extends AppCompatActivity {
         mResultList.setHasFixedSize(true);
         mResultList.setLayoutManager(new LinearLayoutManager(this));
 
-
         mSearchBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String searchText = mSearchField.getText().toString();
+                String searchText = mSearchField.getText().toString().toLowerCase();
                 firebaseUserSearch(searchText);
             }
         });
@@ -75,7 +66,7 @@ public class FriendSearch extends AppCompatActivity {
     private void firebaseUserSearch(String searchText) {
 
         final DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
-        Query query = rootRef.child("users").orderByChild("fName").equalTo(searchText);
+        Query query = rootRef.child("users").orderByChild("fNameS").equalTo(searchText);
                 //tells firebase where to begin retrieving user data
 
         FirebaseRecyclerOptions<User> options =

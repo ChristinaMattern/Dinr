@@ -41,7 +41,6 @@ public class Register extends AppCompatActivity {
     private TextView missingInfo;
     private FirebaseAuth firebaseAuth;
     private ImageView userPic;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -87,7 +86,8 @@ public class Register extends AppCompatActivity {
                                         if (task.isSuccessful()) {
                                             mDatabase = FirebaseDatabase.getInstance().getReference();
                                             FirebaseUser currentFirebaseUser = FirebaseAuth.getInstance().getCurrentUser() ;
-                                            writeNewUser(currentFirebaseUser.getUid(),id, fName, lName, email, password);
+                                            String fNameS=fName.toLowerCase();
+                                            writeNewUser(currentFirebaseUser.getUid(),id, fName, lName, email, password, fNameS);
                                             StorageReference storageReference = FirebaseStorage.getInstance().getReference();
                                             FirebaseStorage storage = FirebaseStorage.getInstance();
                                             final StorageReference storageRef = storage.getReference();
@@ -142,7 +142,7 @@ public class Register extends AppCompatActivity {
 
 
     //adds user to database
-    private void writeNewUser(String userId, String id, String fName, String lName, String email, String password) {
+    private void writeNewUser(String userId, String id, String fName, String lName, String email, String password,String fNameS) {
 
         mDatabase.child("users").child(id).setValue(id);
         mDatabase.child("users").child(id).child("fName").setValue(fName);
@@ -154,6 +154,7 @@ public class Register extends AppCompatActivity {
         mDatabase.child("users").child(id).child("major").setValue(" ");
         mDatabase.child("users").child(id).child("location").setValue("offline ");
         mDatabase.child("users").child(id).child("year").setValue(" ");
+        mDatabase.child("users").child(id).child("fNameS").setValue(fNameS);
 
 
 
