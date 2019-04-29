@@ -82,6 +82,7 @@ public class DiningOptions extends AppCompatActivity {
         switch (item.getItemId()){
             case R.id.Home:
                 startActivity(new Intent(DiningOptions.this, HomeScreen.class));
+                return true;
             case R.id.Settings:
                 startActivity(new Intent(DiningOptions.this, Settings.class));
                 return true;
