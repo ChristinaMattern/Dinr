@@ -53,7 +53,11 @@ public class FriendSearch extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 String searchText = mSearchField.getText().toString().toLowerCase();
-                firebaseUserSearch(searchText);
+                if(searchText.equals("")){
+                    fetch();
+                }else {
+                    firebaseUserSearch(searchText);
+                }
             }
         });
         linearLayoutManager = new LinearLayoutManager(this);
@@ -116,46 +120,45 @@ public class FriendSearch extends AppCompatActivity {
                 .child("users")
                 .orderByChild("id");//tells firebase where to begin retrieving user data
 
-        FirebaseRecyclerOptions<User> options = new FirebaseRecyclerOptions.Builder<User>()
-                .setQuery(query, new SnapshotParser<User>() {
-                            @NonNull
-                            @Override
-                            public User parseSnapshot(@NonNull DataSnapshot snapshot) {//puts user data in user class
-                                return new User(snapshot.child("fName").getValue().toString()
-                                        ,snapshot.child("major").getValue().toString()
-                                ,snapshot.child("location").getValue().toString()
-                                ,snapshot.child("year").getValue().toString(),snapshot.child("userId").getValue().toString(),
-                                        snapshot.child("lName").getValue().toString());}}).build();
+        FirebaseRecyclerOptions<User> options =
+                new FirebaseRecyclerOptions.Builder<User>()
+                        .setQuery(query, User.class)
+                        .setLifecycleOwner(this)
+                        .build();
 
         adapter = new FirebaseRecyclerAdapter<User, ViewHolder>(options) {
-
             @Override
-            protected void onBindViewHolder(@NonNull ViewHolder holder, final int position, final User model) {
+            protected void onBindViewHolder(@NonNull ViewHolder holder, int position, @NonNull final User model) {
                 String fullName=model.getfName()+ " "+model.getlName();
+
                 holder.setTxtName(fullName,model.getMajor(),model.getLocation(),model.getYear());
+
                 holder.root.setOnClickListener(new View.OnClickListener() {
                     @Override
-                    public void onClick(View view) {//saves user id that is clicked on to a shared preference file to retrieve on otherprofile
-                        Toast.makeText(FriendSearch.this, String.valueOf(position), Toast.LENGTH_SHORT).show();
+                    public void onClick(View view) {
+
                         SharedPreferences sharedPref= getSharedPreferences("OtherId", Context.MODE_PRIVATE);
                         SharedPreferences.Editor editor=sharedPref.edit();
                         editor.putString("id",model.getUserId().toString());
                         editor.apply();
                         startActivity(new Intent(FriendSearch.this, OtherProfile.class));
 
+
                     }
                 });
             }
 
+            @NonNull
             @Override
             public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
                 View view = LayoutInflater.from(parent.getContext())
                         .inflate(R.layout.friend_search_card, parent, false);
                 return new ViewHolder(view);
             }
-
         };
+
         mResultList.setAdapter(adapter);
+
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
