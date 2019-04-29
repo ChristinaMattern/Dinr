@@ -37,35 +37,35 @@ public class DiningOptions extends AppCompatActivity {
         diningCV.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(DiningOptions.this, "Dining Hall!", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(DiningOptions.this, DiningRoom.class));
             }
         });
 
         camelotCV.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(DiningOptions.this, "Camelot!", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(DiningOptions.this, CamelotRoom.class));
             }
         });
 
         brubacherCV.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(DiningOptions.this, "Brubacher!", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(DiningOptions.this, BrubacherCafe.class));
             }
         });
 
         starbucksCV.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(DiningOptions.this, "Starbucks!", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(DiningOptions.this, StarbucksCafe.class));
             }
         });
 
         lallyCV.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(DiningOptions.this, "Lally!", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(DiningOptions.this, LallyCafe.class));
             }
         });
     } @Override
@@ -80,9 +80,6 @@ public class DiningOptions extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         firebaseAuth = firebaseAuth.getInstance();
         switch (item.getItemId()){
-            case R.id.Home:
-                startActivity(new Intent(DiningOptions.this, HomeScreen.class));
-                return true;
             case R.id.Settings:
                 startActivity(new Intent(DiningOptions.this, Settings.class));
                 return true;
@@ -99,6 +96,9 @@ public class DiningOptions extends AppCompatActivity {
                 return true;
             case R.id.EditProfile:
                 startActivity(new Intent(DiningOptions.this, EditProfile.class));
+                return true;
+            case R.id.Home:
+                startActivity(new Intent(DiningOptions.this, HomeScreen.class));
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
