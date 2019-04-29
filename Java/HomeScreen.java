@@ -1,6 +1,6 @@
 
- package com.example.dinr;
- /**
+package com.example.dinr;
+/**
  * @author Christina Mattern
  * @date 3/25/2019
  * This is the home screen for the DINR application
@@ -8,6 +8,7 @@
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Canvas;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -93,7 +94,7 @@ public class HomeScreen extends AppCompatActivity implements Home_Screen_Adapter
         firebaseAuth = firebaseAuth.getInstance();
         switch (item.getItemId()){
             case R.id.Settings:
-                Toast.makeText(HomeScreen.this, "Settings", Toast.LENGTH_SHORT).show();
+               startActivity(new Intent(HomeScreen.this, Settings.class));
                 return true;
             case R.id.Logout:
                 Toast.makeText(HomeScreen.this, "Logging Out...", Toast.LENGTH_SHORT).show();
@@ -119,13 +120,15 @@ public class HomeScreen extends AppCompatActivity implements Home_Screen_Adapter
     public void onItemClick(int position) {
         switch(position){
             case 0:
-                startActivity(new Intent(this, MyProfile.class));
+                //Toast.makeText(this, "Dining Options", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(this, DiningOptions.class));
                 break;
             case 1:
-                startActivity(new Intent(this, Canvas.class));
+                startActivity(new Intent(this, Canvas1.class));
                 break;
             case 2:
-                startActivity(new Intent(this, Faq.class));
+                //Toast.makeText(this, "Find Friends", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(this, FriendSearch.class));
                 break;
             default:
                 Toast.makeText(this, "Error", Toast.LENGTH_SHORT).show();
