@@ -22,7 +22,7 @@
         app:showAsAction="always">
         <menu>
             <item android:id="@+id/MyProfile"
-                android:title="View My Profile"
+                android:title="My Profile"
                 app:showAsAction="never" />
             <item android:id="@+id/EditProfile"
                 android:title="Edit Profile"
