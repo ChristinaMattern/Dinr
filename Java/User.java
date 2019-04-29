@@ -8,6 +8,7 @@ public class User {
     public String location;
     public String year;
     public String userId;
+    public String lName;
 
     public User(){
 
@@ -18,9 +19,18 @@ public class User {
         return fName;
     }
 
-    public void setName(String fName) {
+    public void setfName(String fName) {
 
         this.fName = fName;
+    }
+    public String getlName() {
+
+        return lName;
+    }
+
+    public void setlName(String lName) {
+
+        this.lName = lName;
     }
     public String getMajor() {
 
@@ -60,12 +70,13 @@ public class User {
         this.userId= userId;
     }
 
-    public User(String fName,String major, String location, String year, String userId) {
+    public User(String fName,String major, String location, String year, String userId,String lName) {
         this.fName = fName;
         this.year=year;
         this.location=location;
         this.major=major;
         this.userId=userId;
+        this.lName=lName;
 
     }
 }
