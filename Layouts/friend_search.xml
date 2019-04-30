@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#ffffff"
+    android:background="#DDDDDD"
     tools:context=".FriendSearch">
 
     <TextView
@@ -15,8 +15,8 @@
         android:layout_alignParentTop="true"
         android:layout_marginLeft="30dp"
         android:layout_marginTop="30dp"
-        android:text="Firebase Search"
-        android:textColor="#555555"
+        android:text="Search for Users"
+        android:textColor="#696969"
         android:textSize="24sp"
         android:layout_alignParentLeft="true" />
 
@@ -38,7 +38,7 @@
         android:paddingLeft="20dp"
         android:paddingRight="20dp"
         android:paddingTop="10dp"
-        android:textColor="#999999"
+        android:textColor="#9C8603"
         android:textSize="16sp"
         android:layout_toLeftOf="@+id/search_btn"
         android:layout_alignLeft="@+id/heading_label" />
@@ -47,13 +47,13 @@
         android:id="@+id/search_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/search_field"
         android:layout_alignBottom="@+id/search_field"
         android:layout_alignParentEnd="true"
-        android:layout_alignTop="@+id/search_field"
+        android:layout_alignParentRight="true"
         android:layout_marginRight="30dp"
-        android:background="@android:color/background_light"
-        app:srcCompat="@mipmap/search_button"
-        android:layout_alignParentRight="true" />
+        android:background="#DDDDDD"
+        app:srcCompat="@android:drawable/ic_menu_search" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/result_list"
