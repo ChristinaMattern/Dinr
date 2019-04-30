@@ -15,9 +15,20 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Canvas"></activity>
-        <activity android:name=".EditProfile" />
+        <activity android:name=".StarbucksCafe"></activity>
+        <activity android:name=".LallyCafe" />
+        <activity android:name=".DiningRoom" />
+        <activity android:name=".CamelotRoom" />
+        <activity android:name=".BrubacherCafe" />
+        <activity android:name=".ChangePassword" />
+        <activity android:name=".OtherProfile" />
+        <activity android:name=".FriendSearch" />
+        <activity android:name=".ForgotPass" />
+        <activity android:name=".DiningOptions" />
+        <activity android:name=".Canvas1" />
+        <activity android:name=".Settings" />
         <activity android:name=".Faq" />
+        <activity android:name=".EditProfile" />
         <activity android:name=".MyProfile" />
         <activity android:name=".Register" />
         <activity android:name=".HomeScreen" />
@@ -29,7 +40,5 @@
             </intent-filter>
         </activity>
     </application>
-    
-    <uses-permission android:name="android.permission.INTERNET" />
 
 </manifest>
