@@ -229,7 +229,7 @@
             android:layout_marginEnd="8dp"
             android:layout_marginRight="8dp"
             android:background="@drawable/my_border"
-            app:layout_constraintBottom_toTopOf="@+id/edit_button"
+            app:layout_constraintBottom_toTopOf="@+id/editButton"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/bioWord"
