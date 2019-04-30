@@ -4,17 +4,21 @@ import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
 public class ForgotPass extends AppCompatActivity {
 
@@ -33,24 +37,49 @@ public class ForgotPass extends AppCompatActivity {
         studentID = findViewById(R.id.studentID);
         backBtn = findViewById(R.id.backButton);
 
-        String id = studentID.getText().toString();
-
         forgotBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FirebaseAuth auth = FirebaseAuth.getInstance();
-                String emailAddress = emailAddressTV.getText().toString();
-                auth.sendPasswordResetEmail(emailAddress).addOnCompleteListener(new OnCompleteListener<Void>() {
+                final FirebaseAuth auth = FirebaseAuth.getInstance();
+                final String emailAddress = emailAddressTV.getText().toString();
+                final String student=studentID.getText().toString();
+                final DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
+                final Query query = rootRef.child("users").orderByChild("email").equalTo(emailAddress);//finds the email in the database
+                final ValueEventListener valueEventListener = new ValueEventListener() {
                     @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if (task.isSuccessful()) {
-                            Toast.makeText(ForgotPass.this, "Email Sent!", Toast.LENGTH_SHORT).show();
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+
+                        String email=null;
+                        String id=null;
+                        for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                            id = (String) ds.getKey();//retrieves the id
+                            email = (String) ds.child("email").getValue();//retrieves the email associated with the id
+                        }
+                        if(email.equals(emailAddress)&&id.equals(student)){//compares the data base information with the entry
+                            auth.sendPasswordResetEmail(emailAddress).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    if (task.isSuccessful()) {
+                                        Toast.makeText(ForgotPass.this, "Email Sent!", Toast.LENGTH_SHORT).show();
+                                    } else {
+                                        Toast.makeText(ForgotPass.this, "Email Not Sent!", Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            });
                         }
                         else{
-                            Toast.makeText(ForgotPass.this, "Email Not Sent!", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(ForgotPass.this, "Wrong Combination", Toast.LENGTH_SHORT).show();
                         }
                     }
-                });
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+
+                };query.addListenerForSingleValueEvent(valueEventListener);
+
+
             }
         });
 
