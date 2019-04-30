@@ -45,41 +45,44 @@ public class ForgotPass extends AppCompatActivity {
                 final String student=studentID.getText().toString();
                 final DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
                 final Query query = rootRef.child("users").orderByChild("email").equalTo(emailAddress);//finds the email in the database
-                final ValueEventListener valueEventListener = new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
+                if(!emailAddress.isEmpty()&&!student.isEmpty()){
+                    final ValueEventListener valueEventListener = new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
 
-                        String email=null;
-                        String id=null;
-                        for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                            id = (String) ds.getKey();//retrieves the id
-                            email = (String) ds.child("email").getValue();//retrieves the email associated with the id
-                        }
-                        if(email.equals(emailAddress)&&id.equals(student)){//compares the data base information with the entry
-                            auth.sendPasswordResetEmail(emailAddress).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                @Override
-                                public void onComplete(@NonNull Task<Void> task) {
-                                    if (task.isSuccessful()) {
-                                        Toast.makeText(ForgotPass.this, "Email Sent!", Toast.LENGTH_SHORT).show();
-                                    } else {
-                                        Toast.makeText(ForgotPass.this, "Email Not Sent!", Toast.LENGTH_SHORT).show();
+                            String email = "";
+                            String id = "";
+                            for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                                id = (String) ds.getKey();//retrieves the id
+                                email = (String) ds.child("email").getValue();//retrieves the email associated with the id
+                            }
+                            if (email.equals(emailAddress) && id.equals(student)) {//compares the data base information with the entry
+                                auth.sendPasswordResetEmail(emailAddress).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                        if (task.isSuccessful()) {
+                                            Toast.makeText(ForgotPass.this, "Email Sent!", Toast.LENGTH_SHORT).show();
+                                        } else {
+                                            Toast.makeText(ForgotPass.this, "Email Not Sent!", Toast.LENGTH_SHORT).show();
+                                        }
                                     }
-                                }
-                            });
+                                });
+                            } else {
+                                Toast.makeText(ForgotPass.this, "Wrong Combination", Toast.LENGTH_SHORT).show();
+                            }
                         }
-                        else{
-                            Toast.makeText(ForgotPass.this, "Wrong Combination", Toast.LENGTH_SHORT).show();
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
                         }
-                    }
 
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                    };
+                    query.addListenerForSingleValueEvent(valueEventListener);
 
-                    }
-
-                };query.addListenerForSingleValueEvent(valueEventListener);
-
-
+                } else{
+                    Toast.makeText(ForgotPass.this, "Fill out all fields", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
