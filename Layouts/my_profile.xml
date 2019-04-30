@@ -231,9 +231,10 @@
             android:background="@drawable/my_border"
             app:layout_constraintBottom_toTopOf="@+id/editButton"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.552"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/bioWord"
-            app:layout_constraintVertical_bias="0.44" />
+            app:layout_constraintVertical_bias="0.166" />
 
     </android.support.constraint.ConstraintLayout>
 </ScrollView>
