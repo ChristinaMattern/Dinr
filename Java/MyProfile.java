@@ -2,21 +2,24 @@ package com.example.dinr;
 /*@author Nola Smtih
 @date 4/17/2019 */
 
+import android.app.NotificationManager;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.Handler;
 import android.support.annotation.NonNull;
+import android.support.v4.app.NotificationCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -42,7 +45,8 @@ public class MyProfile extends AppCompatActivity {
     private Button editButton;
     private ImageView userPic;
     private FirebaseAuth firebaseAuth;
-    private Spinner dropdown;
+    private Button locationB;
+    private TextView locationWord;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,8 +56,9 @@ public class MyProfile extends AppCompatActivity {
         bioText = (TextView)findViewById(R.id.bioText);
         yearText = (TextView)findViewById(R.id.yearText);
         majorText = (TextView)findViewById(R.id.majorText);
-        editButton = (Button)findViewById(R.id.edit_button);
-        dropdown = findViewById(R.id.locationWord);
+        editButton = (Button)findViewById(R.id.editButton);
+        locationWord = (TextView)findViewById(R.id.locationWord);
+        locationB = (Button)findViewById(R.id.location);
         FirebaseUser currentFirebaseUser = FirebaseAuth.getInstance().getCurrentUser() ;
         userId=currentFirebaseUser.getUid();//retrieves user id of signed in user
         final DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
@@ -78,11 +83,11 @@ public class MyProfile extends AppCompatActivity {
                     year= (String) ds.child("year").getValue();//retrieves year
                     major= (String) ds.child("major").getValue();//retrieves major
                     location=(String) ds.child("location").getValue();//retrieves location
-
+                    //retrieves the photo
                     StorageReference storageReference = FirebaseStorage.getInstance().getReference();
                     StorageReference photoReference= storageReference.child(id).child("image");
                     userPic = (ImageView)findViewById(R.id.userPic);
-                    final long ONE_MEGABYTE = 3000 * 3000;
+                    final long ONE_MEGABYTE = 4000 * 4000;
                     photoReference.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
                         @Override
                         public void onSuccess(byte[] bytes) {
@@ -102,11 +107,7 @@ public class MyProfile extends AppCompatActivity {
                 bioText.setText(bio);//sets bio
                 yearText.setText(year);//sets year
                 majorText.setText(major);//sets major
-                ArrayAdapter myAdap = (ArrayAdapter) dropdown.getAdapter();
-                int spinnerPosition = myAdap.getPosition(location);
-                dropdown.setSelection(spinnerPosition);
-
-
+                locationWord.setText(location);//sets location
             }
 
             @Override
@@ -115,36 +116,70 @@ public class MyProfile extends AppCompatActivity {
             }
         };
         query.addListenerForSingleValueEvent(valueEventListener);
-        //create a list of items for the spinner.
-        String[] items = new String[]{"Offline","Dining Hall", "Camelot Room", "Brubacher Cafe", "Starbucks", "Lally Cafe"};
-        //create an adapter to describe how the items are displayed, adapters are used in several places in android.
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, items);
-        //set the spinners adapter to the previously created one.
-        dropdown.setAdapter(adapter);
-        dropdown.setOnItemSelectedListener(
-                new AdapterView.OnItemSelectedListener() {
-                    @Override
-                    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                        final String location = dropdown.getSelectedItem().toString();
-                        editUser(userId,location);//changes the location
-                    }
 
-                    @Override
-                    public void onNothingSelected(AdapterView<?> adapterView) {
-                    }
-                    //add some code here
-                }
-        );
+        locationB.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                alert(userId);
+            }
+        });//to change location
 
         editButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {//takes you to the user's edit profile page
+
                 startActivity(new Intent(MyProfile.this, EditProfile.class));
             }
         });
-
     }
 
+    public void alert(final String userId){
+        final String[] items = new String[]{"Offline","Dining Hall", "Camelot Room", "Brubacher Cafe", "Starbucks", "Lally Cafe"};
+        final String[] timeW = {"20 minutes", "30 minutes", "40 minutes", "50 minutes", "60 minutes"};
+        final int[] timeN = {20, 30, 40, 50, 60};//holds values for conversion
+        AlertDialog.Builder builder2 = new AlertDialog.Builder(MyProfile.this);//first alert box
+        builder2.setTitle("What do you want to change your location to");
+        builder2.setItems(items, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                final String location=items[which];
+                AlertDialog.Builder builder = new AlertDialog.Builder(MyProfile.this);//second alert box
+                builder.setTitle("How long do you plan on being there?");
+                builder.setItems(timeW, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        int timer = timeN[which];//retrieves the corresponding number with word
+                        timer=timer*10000;//converts to milliseconds
+
+                        final Handler handler = new Handler();
+                        handler.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                locationWord.setText("Offline");
+                                NotificationCompat.Builder b = new NotificationCompat.Builder(MyProfile.this);
+                                b.setAutoCancel(true)
+                                        .setDefaults(NotificationCompat.DEFAULT_ALL)
+                                        .setWhen(System.currentTimeMillis())
+                                        .setSmallIcon(R.drawable.test_icon)
+                                        .setTicker("Are you still at your location?")
+                                        .setContentTitle("Are You Still There?")
+                                        .setContentText("The amount of time you said " +
+                                                "you would be at your location has been reach. You are being put offline until you " +
+                                                "update your time and location on your profile.")
+                                        .setContentInfo("INFO");
+                                NotificationManager nm = (NotificationManager) MyProfile.this.getSystemService(Context.NOTIFICATION_SERVICE);
+                                nm.notify(1, b.build());
+                            }
+                        }, timer);
+                        locationWord.setText(location);//changes location
+                        editUser(userId,location);
+                    }
+                });
+                builder.show();
+            }
+        });
+        builder2.show();
+    }
 
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
@@ -178,10 +213,10 @@ public class MyProfile extends AppCompatActivity {
     }
     //adds user's profile to database
     private void editUser(String id,String location) {
-
         mDatabase = FirebaseDatabase.getInstance().getReference().child("users").child(id).child("location");
         mDatabase.setValue(location);
         return;
     }
+
 
 }
