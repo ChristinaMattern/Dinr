@@ -10,6 +10,9 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
@@ -20,6 +23,7 @@ import android.widget.Toast;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.firebase.ui.database.SnapshotParser;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -33,7 +37,7 @@ public class FriendSearch extends AppCompatActivity {
     private DatabaseReference mUserDatabase;
     private LinearLayoutManager linearLayoutManager;
     private FirebaseRecyclerAdapter adapter;
-    private FirebaseRecyclerAdapter adapter2;
+    private FirebaseAuth firebaseAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,7 +75,7 @@ public class FriendSearch extends AppCompatActivity {
 
         final DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
         Query query = rootRef.child("users").orderByChild("fNameS").equalTo(searchText);
-                //tells firebase where to begin retrieving user data
+        //tells firebase where to begin retrieving user data
 
         FirebaseRecyclerOptions<User> options =
                 new FirebaseRecyclerOptions.Builder<User>()
@@ -90,11 +94,11 @@ public class FriendSearch extends AppCompatActivity {
                     @Override
                     public void onClick(View view) {
 
-                            SharedPreferences sharedPref= getSharedPreferences("OtherId", Context.MODE_PRIVATE);
-                            SharedPreferences.Editor editor=sharedPref.edit();
-                            editor.putString("id",model.getUserId().toString());
-                            editor.apply();
-                            startActivity(new Intent(FriendSearch.this, OtherProfile.class));
+                        SharedPreferences sharedPref= getSharedPreferences("OtherId", Context.MODE_PRIVATE);
+                        SharedPreferences.Editor editor=sharedPref.edit();
+                        editor.putString("id",model.getUserId().toString());
+                        editor.apply();
+                        startActivity(new Intent(FriendSearch.this, OtherProfile.class));
 
 
                     }
@@ -195,5 +199,32 @@ public class FriendSearch extends AppCompatActivity {
     protected void onStop() {
         super.onStop();
         adapter.stopListening();
+    }
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.friend_search_menu, menu);
+        return true;
+
+    }
+    public boolean onOptionsItemSelected(MenuItem item) {
+        firebaseAuth = firebaseAuth.getInstance();
+        switch (item.getItemId()) {
+            case R.id.Settings:
+                startActivity(new Intent(FriendSearch.this, Settings.class));
+                return true;
+            case R.id.Logout:
+                Toast.makeText(FriendSearch.this, "Logging Out...", Toast.LENGTH_SHORT).show();
+                firebaseAuth.signOut();
+                startActivity(new Intent(FriendSearch.this, LoginScreen.class));
+                return true;
+            case R.id.Help:
+                startActivity(new Intent(FriendSearch.this, Faq.class));
+                return true;
+            case R.id.Home:
+                startActivity(new Intent(FriendSearch.this, HomeScreen.class));
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 }

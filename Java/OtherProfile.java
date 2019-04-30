@@ -45,6 +45,7 @@ public class OtherProfile extends AppCompatActivity {
     private TextView majorText;
     private ImageView userPic;
     private TextView locationText;
+    private FirebaseAuth firebaseAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -113,5 +114,32 @@ public class OtherProfile extends AppCompatActivity {
         query.addListenerForSingleValueEvent(valueEventListener);
 
 
+    }
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.other_profile_menu, menu);
+        return true;
+
+    }
+    public boolean onOptionsItemSelected(MenuItem item) {
+        firebaseAuth = firebaseAuth.getInstance();
+        switch (item.getItemId()) {
+            case R.id.Settings:
+                startActivity(new Intent(OtherProfile.this, Settings.class));
+                return true;
+            case R.id.Logout:
+                Toast.makeText(OtherProfile.this, "Logging Out...", Toast.LENGTH_SHORT).show();
+                firebaseAuth.signOut();
+                startActivity(new Intent(OtherProfile.this, LoginScreen.class));
+                return true;
+            case R.id.Help:
+                startActivity(new Intent(OtherProfile.this, Faq.class));
+                return true;
+            case R.id.Home:
+                startActivity(new Intent(OtherProfile.this, HomeScreen.class));
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 }
