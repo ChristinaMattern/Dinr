@@ -45,6 +45,7 @@ public class OtherProfile extends AppCompatActivity {
     private TextView majorText;
     private ImageView userPic;
     private TextView locationText;
+    private Button backButton;
     private FirebaseAuth firebaseAuth;
 
     @Override
@@ -56,6 +57,7 @@ public class OtherProfile extends AppCompatActivity {
         yearText = (TextView)findViewById(R.id.yearText);
         majorText = (TextView)findViewById(R.id.majorText);
         locationText=(TextView)findViewById(R.id.location);
+        backButton = (Button)findViewById(R.id.back);
 
         SharedPreferences sharedPref=getSharedPreferences("OtherId", Context.MODE_PRIVATE);
         userId=sharedPref.getString("id","");
@@ -114,6 +116,12 @@ public class OtherProfile extends AppCompatActivity {
         query.addListenerForSingleValueEvent(valueEventListener);
 
 
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(OtherProfile.this, FriendSearch.class));
+            }
+        });
     }
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
