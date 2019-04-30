@@ -16,7 +16,7 @@
         android:clickable="true"
         android:focusable="true"
         android:orientation="vertical"
-        android:background="#D8D8D8"
+        android:background="#D3D3D3"
         android:padding="16dp">
 
         <TextView
