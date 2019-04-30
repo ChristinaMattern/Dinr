@@ -1,191 +1,191 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-    <!--@authors Christina Mattern, Angela Cebada
-        @date 04/29/2019-->
+<!--@authors Christina Mattern, Angela Cebada
+    @date 04/29/2019-->
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-xmlns:app="http://schemas.android.com/apk/res-auto"
-xmlns:tools="http://schemas.android.com/tools"
-android:layout_width="match_parent"
-android:layout_height="match_parent"
-android:orientation="vertical"
-android:weightSum="10"
-android:background="#FFE03B"
-tools:context=".DiningOptions">
-
-<RelativeLayout
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="0dp"
-    android:layout_weight="2">
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:weightSum="10"
+    android:background="#FFE03B"
+    tools:context=".DiningOptions">
 
-    <TextView
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="2">
 
-        android:id="@+id/optionsTextView"
-        android:layout_width="wrap_content"
+        <TextView
+
+            android:id="@+id/optionsTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:fontFamily="sans-serif"
+            android:text="Dining Options"
+            android:textColor="@color/colorPrimary"
+            android:textSize="34sp" />
+    </RelativeLayout>
+
+    <GridLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:fontFamily="sans-serif"
-        android:text="Dining Options"
-        android:textColor="@color/colorPrimary"
-        android:textSize="34sp" />
-</RelativeLayout>
+        android:layout_weight="8"
+        android:alignmentMode="alignMargins"
+        android:columnCount="2"
+        android:columnOrderPreserved="false"
+        android:padding="14dp"
+        android:rowCount="3">
 
-<GridLayout
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_weight="8"
-    android:alignmentMode="alignMargins"
-    android:columnCount="2"
-    android:columnOrderPreserved="false"
-    android:padding="14dp"
-    android:rowCount="3">
+        <!--Dining Hall-->
+        <android.support.v7.widget.CardView
+            android:id="@+id/diningHallCard"
+            android:layout_width="5dp"
+            android:layout_height="0dp"
+            android:layout_rowWeight="1"
+            android:layout_columnWeight="1"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginBottom="16dp"
+            android:scaleType="centerCrop"
+            app:cardBackgroundColor="@android:color/transparent">
+            <!--app:cardElevation="8dp"
+        app:cardCornerRadius="8dp"
+        >-->
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal|center_vertical"
+                android:orientation="vertical">
 
-    <!--Dining Hall-->
-    <android.support.v7.widget.CardView
-        android:id="@+id/diningHallCard"
-        android:layout_width="5dp"
-        android:layout_height="0dp"
-        android:layout_rowWeight="1"
-        android:layout_columnWeight="1"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
-        android:layout_marginBottom="16dp"
-        android:scaleType="centerCrop"
-        app:cardBackgroundColor="@android:color/transparent">
-        <!--app:cardElevation="8dp"
-    app:cardCornerRadius="8dp"
-    >-->
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal|center_vertical"
-            android:orientation="vertical">
+                <ImageView
+                    android:id="@+id/diningHall"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/dining_hall" />
+            </LinearLayout>
+        </android.support.v7.widget.CardView>
+
+        <!--Camelot-->
+        <android.support.v7.widget.CardView
+            android:id="@+id/camelotCard"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_rowWeight="1"
+            android:layout_columnWeight="1"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginBottom="16dp"
+            app:cardBackgroundColor="@android:color/transparent"
+            app:cardCornerRadius="8dp"
+            app:cardElevation="8dp">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal|center_vertical"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/camelot"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/camelot" />
+            </LinearLayout>
+        </android.support.v7.widget.CardView>
+
+        <!--Brubacher-->
+        <android.support.v7.widget.CardView
+            android:id="@+id/brubacherCard"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_rowWeight="1"
+            android:layout_columnWeight="1"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginBottom="16dp"
+            app:cardBackgroundColor="@android:color/transparent"
+            app:cardCornerRadius="8dp"
+            app:cardElevation="8dp">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal|center_vertical"
+                android:orientation="vertical" />
 
             <ImageView
-                android:id="@+id/diningHall"
+                android:id="@+id/brubacher"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:scaleType="centerCrop"
-                android:src="@drawable/dining_hall" />
-        </LinearLayout>
-    </android.support.v7.widget.CardView>
+                android:src="@drawable/brubacher" />
 
-    <!--Camelot-->
-    <android.support.v7.widget.CardView
-        android:id="@+id/camelotCard"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_rowWeight="1"
-        android:layout_columnWeight="1"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
-        android:layout_marginBottom="16dp"
-        app:cardBackgroundColor="@android:color/transparent"
-        app:cardCornerRadius="8dp"
-        app:cardElevation="8dp">
+        </android.support.v7.widget.CardView>
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal|center_vertical"
-            android:orientation="vertical">
+        <!--Brubacher-->
+        <android.support.v7.widget.CardView
+            android:id="@+id/starbucksCard"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_rowWeight="1"
+            android:layout_columnWeight="1"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginBottom="16dp"
+            app:cardBackgroundColor="#B4CDCD"
+            app:cardCornerRadius="8dp"
+            app:cardElevation="8dp">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal|center_vertical"
+                android:orientation="vertical" />
 
             <ImageView
-                android:id="@+id/camelot"
+                android:id="@+id/starbucks"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:scaleType="centerCrop"
-                android:src="@drawable/camelot" />
-        </LinearLayout>
-    </android.support.v7.widget.CardView>
+                android:src="@drawable/starbucks" />
 
-    <!--Brubacher-->
-    <android.support.v7.widget.CardView
-        android:id="@+id/brubacherCard"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_rowWeight="1"
-        android:layout_columnWeight="1"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
-        android:layout_marginBottom="16dp"
-        app:cardBackgroundColor="@android:color/transparent"
-        app:cardCornerRadius="8dp"
-        app:cardElevation="8dp">
+        </android.support.v7.widget.CardView>
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal|center_vertical"
-            android:orientation="vertical" />
+        <!--Lally-->
+        <android.support.v7.widget.CardView
+            android:id="@+id/lallyCard"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_rowWeight="1"
+            android:layout_columnWeight="1"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginBottom="16dp"
+            app:cardBackgroundColor="#B4CDCD"
+            app:cardCornerRadius="8dp"
+            app:cardElevation="8dp">
 
-        <ImageView
-            android:id="@+id/brubacher"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:scaleType="centerCrop"
-            android:src="@drawable/brubacher" />
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal|center_vertical"
+                android:orientation="vertical" />
 
-    </android.support.v7.widget.CardView>
+            <ImageView
+                android:id="@+id/lally"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:scaleType="centerCrop"
+                android:src="@drawable/lally" />
 
-    <!--Brubacher-->
-    <android.support.v7.widget.CardView
-        android:id="@+id/starbucksCard"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_rowWeight="1"
-        android:layout_columnWeight="1"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
-        android:layout_marginBottom="16dp"
-        app:cardBackgroundColor="#B4CDCD"
-        app:cardCornerRadius="8dp"
-        app:cardElevation="8dp">
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal|center_vertical"
-            android:orientation="vertical" />
-
-        <ImageView
-            android:id="@+id/starbucks"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:scaleType="centerCrop"
-            android:src="@drawable/starbucks" />
-
-    </android.support.v7.widget.CardView>
-
-    <!--Lally-->
-    <android.support.v7.widget.CardView
-        android:id="@+id/lallyCard"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_rowWeight="1"
-        android:layout_columnWeight="1"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
-        android:layout_marginBottom="16dp"
-        app:cardBackgroundColor="#B4CDCD"
-        app:cardCornerRadius="8dp"
-        app:cardElevation="8dp">
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal|center_vertical"
-            android:orientation="vertical" />
-
-        <ImageView
-            android:id="@+id/lally"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:scaleType="centerCrop"
-            android:src="@drawable/lally" />
-
-    </android.support.v7.widget.CardView>
+        </android.support.v7.widget.CardView>
 
 
-</GridLayout>
+    </GridLayout>
 </LinearLayout>
