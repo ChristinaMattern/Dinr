@@ -16,7 +16,7 @@
         android:clickable="true"
         android:focusable="true"
         android:orientation="vertical"
-        android:background="?attr/selectableItemBackground"
+        android:background="#D8D8D8"
         android:padding="16dp">
 
         <TextView
@@ -33,7 +33,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
-            android:textColor="#FA0000"
+            android:textColor="#EC2315"
             android:text="location" />
 
         <TextView
