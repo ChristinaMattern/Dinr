@@ -33,11 +33,14 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="128dp"
         android:layout_marginLeft="128dp"
+        android:layout_marginEnd="133dp"
+        android:layout_marginRight="133dp"
         android:layout_marginBottom="8dp"
         android:text="Change password?"
         android:textColor="@android:color/holo_blue_dark"
         android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/settingsTV"
         app:layout_constraintVertical_bias="0.107" />
@@ -52,10 +55,13 @@
         android:layout_marginTop="56dp"
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
+        android:layout_marginBottom="8dp"
         android:background="@drawable/my_border"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/profileTV" />
+        app:layout_constraintTop_toBottomOf="@+id/profileTV"
+        app:layout_constraintVertical_bias="0.168" />
 
     <TextView
         android:id="@+id/contactTV"
@@ -91,11 +97,14 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="92dp"
         android:layout_marginLeft="92dp"
+        android:layout_marginEnd="95dp"
+        android:layout_marginRight="95dp"
         android:layout_marginBottom="8dp"
         android:text="Looking for Profile Settings?"
         android:textColor="@android:color/holo_blue_dark"
         android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/changePasswordTV"
         app:layout_constraintVertical_bias="0.071" />
