@@ -101,7 +101,7 @@ public class EditProfile extends AppCompatActivity {
                     StorageReference storageReference = FirebaseStorage.getInstance().getReference();
                     StorageReference photoReference= storageReference.child(id).child("image");
                     userPic = findViewById(R.id.userPic);
-                    final long ONE_MEGABYTE = 1024 * 1024;
+                    final long ONE_MEGABYTE = 4000 * 4000;
                     photoReference.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
                         @Override
                         public void onSuccess(byte[] bytes) {
@@ -112,7 +112,8 @@ public class EditProfile extends AppCompatActivity {
                     }).addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception exception) {
-                            Toast.makeText(getApplicationContext(), "No Such file or Path found!!", Toast.LENGTH_LONG).show();
+                            Toast.makeText(getApplicationContext(), "Picture too large! Choose a different one", Toast.LENGTH_LONG).show();
+                            saveButton.setEnabled(false);
                         }
                     });
 
@@ -146,12 +147,12 @@ public class EditProfile extends AppCompatActivity {
 
         saveButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                RadioGroup rg = (RadioGroup)findViewById(R.id.year);
-                final String yearText= ((RadioButton)findViewById(rg.getCheckedRadioButtonId())).getText().toString();
-                final String bio=bioTextNew.getText().toString();
-                final String major= majorTextNew.getText().toString();
-                FirebaseUser currentFirebaseUser = FirebaseAuth.getInstance().getCurrentUser() ;
-                userId=currentFirebaseUser.getUid();//retrieves current user
+                RadioGroup rg = (RadioGroup) findViewById(R.id.year);
+                final String yearText = ((RadioButton) findViewById(rg.getCheckedRadioButtonId())).getText().toString();
+                final String bio = bioTextNew.getText().toString();
+                final String major = majorTextNew.getText().toString();
+                FirebaseUser currentFirebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+                userId = currentFirebaseUser.getUid();//retrieves current user
                 final DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
                 FirebaseStorage storage = FirebaseStorage.getInstance();
                 final StorageReference storageRef = storage.getReference();
@@ -161,14 +162,15 @@ public class EditProfile extends AppCompatActivity {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         //edits the user's profile
-                        for(DataSnapshot ds : dataSnapshot.getChildren()) {
+                        for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                            try {
                                 String id = (String) ds.getKey();//retrieves user's id to know where to put info into profile
-                                StorageReference imagesRef= storageRef.child(id).child("image");
+                                StorageReference imagesRef = storageRef.child(id).child("image");
                                 userPic.setDrawingCacheEnabled(true);
                                 userPic.buildDrawingCache();
                                 Bitmap bitmap = ((BitmapDrawable) userPic.getDrawable()).getBitmap();
                                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+                                bitmap.compress(Bitmap.CompressFormat.JPEG, 60, baos);
                                 byte[] data = baos.toByteArray();
                                 UploadTask uploadTask = imagesRef.putBytes(data);
                                 uploadTask.addOnFailureListener(new OnFailureListener() {
@@ -183,23 +185,27 @@ public class EditProfile extends AppCompatActivity {
                                     }
                                 });
                                 editUser(id, bio, yearText, major);
+                            }catch (NullPointerException e){
+                                Toast.makeText(EditProfile.this, "No picture chosen", Toast.LENGTH_SHORT).show();
+                            }
                         }
-                    }
+
+                        }
 
                     @Override
                     public void onCancelled(@NonNull DatabaseError databaseError) {
 
                     }
                 });
-                final Handler handler = new Handler();
-                handler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        startActivity(new Intent(EditProfile.this, MyProfile.class));
-                    }
-                }, 2000);//delays opening for 1 second to allow firebase to update
+                    final Handler handler = new Handler();
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(EditProfile.this, "Saving changes...", Toast.LENGTH_LONG).show();
 
-
+                            startActivity(new Intent(EditProfile.this, MyProfile.class));
+                        }
+                    }, 3000);//delays opening for 3 seconds to allow firebase to update
             }
         });
         userPic.setOnClickListener(new View.OnClickListener() {
@@ -207,11 +213,10 @@ public class EditProfile extends AppCompatActivity {
                 userPic.setImageBitmap(null);
                 if (Image != null)
                     Image.recycle();
-                Intent intent = new Intent();
-                intent.setType("image/*");
-                intent.setAction(Intent.ACTION_GET_CONTENT);
-                startActivityForResult(Intent.createChooser(intent, "Select Picture"), GALLERY);
-
+                    Intent intent = new Intent();
+                    intent.setType("image/*");
+                    intent.setAction(Intent.ACTION_GET_CONTENT);
+                    startActivityForResult(Intent.createChooser(intent, "Select Picture"), GALLERY);
             }
         });
     }
@@ -286,4 +291,5 @@ public class EditProfile extends AppCompatActivity {
                 return super.onOptionsItemSelected(item);
         }
     }
+
 }
