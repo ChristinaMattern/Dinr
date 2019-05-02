@@ -155,24 +155,25 @@ public class Register extends AppCompatActivity {
         mDatabase.child("users").child(id).child("location").setValue("offline ");
         mDatabase.child("users").child(id).child("year").setValue(" ");
         mDatabase.child("users").child(id).child("fNameS").setValue(fNameS);
+        mDatabase.child("users").child(id).child("flist").setValue("Friends List");
 
 
 
     }
 
-
+    //makes sure the user's fields are correct
     private Boolean validate(String fName, String lName, final String id, String email, String password, String confirmPass) {
-        if (!fName.isEmpty() && !lName.isEmpty() && !id.isEmpty() && !email.isEmpty() && !password.isEmpty() && !confirmPass.isEmpty() && password.equals(confirmPass) && password.length() >= 6) {
+        if (!fName.isEmpty() && !lName.isEmpty() && !id.isEmpty() && !email.isEmpty() && !password.isEmpty() && !confirmPass.isEmpty() && password.equals(confirmPass) && password.length() >= 6 && id.length()==9) {
             return true;
         } else if (password.length() < 6) {
             Toast.makeText(Register.this, "Passwords must be 6 numbers or longer!", Toast.LENGTH_SHORT).show();
-        } else if (!password.equals(confirmPass)) {
+        } else if(id.length()<9|| id.length()>9){
+            Toast.makeText(Register.this, "Saint Rose ID#s are 9 digits long", Toast.LENGTH_SHORT).show();
+        }else if (!password.equals(confirmPass)) {
             Toast.makeText(Register.this, "Passwords do not match!", Toast.LENGTH_SHORT).show();
         } else {
             Toast.makeText(Register.this, "All fields must be filled!", Toast.LENGTH_SHORT).show();
-            ;
         }
         return false;
     }
-
 }
