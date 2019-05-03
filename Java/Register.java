@@ -164,7 +164,7 @@ public class Register extends AppCompatActivity {
 
     private Boolean validate(String fName, String lName, final String id, String email, String password, String confirmPass) {
         if (!fName.isEmpty() && !lName.isEmpty() && fName.trim().length() > 0 &&lName.trim().length() > 0 && !id.isEmpty() && !email.isEmpty() &&
-                !password.isEmpty() && !confirmPass.isEmpty() && password.equals(confirmPass) && password.length() >= 6) {
+                !password.isEmpty() && !confirmPass.isEmpty() && password.equals(confirmPass) && password.length() >= 6 && id.length() == 9) {
             if(!email.contains("@")){
                 Toast.makeText(this, "Email needs to have the @ symbol", Toast.LENGTH_SHORT).show();
                 return false;
@@ -178,6 +178,8 @@ public class Register extends AppCompatActivity {
             Toast.makeText(this, "First name and/or Last name cannot be empty", Toast.LENGTH_SHORT).show();
         } else if(fName.isEmpty() || lName.isEmpty() || id.isEmpty() || email.isEmpty() || password.isEmpty() || confirmPass.isEmpty()){
             Toast.makeText(this, "All fields must be filled!", Toast.LENGTH_SHORT).show();
+        } else if(id.length() < 9 || id.length() > 9){
+            Toast.makeText(this, "Saint Rose's ID numbers are 9 digits long!", Toast.LENGTH_SHORT).show();
         }
         else {
             Toast.makeText(Register.this, "Must be a Saint Rose email!", Toast.LENGTH_SHORT).show();
