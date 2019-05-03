@@ -161,19 +161,37 @@ public class Register extends AppCompatActivity {
 
     }
 
-    //makes sure the user's fields are correct
+
     private Boolean validate(String fName, String lName, final String id, String email, String password, String confirmPass) {
-        if (!fName.isEmpty() && !lName.isEmpty() && !id.isEmpty() && !email.isEmpty() && !password.isEmpty() && !confirmPass.isEmpty() && password.equals(confirmPass) && password.length() >= 6 && id.length()==9) {
+        if (!fName.isEmpty() && !lName.isEmpty() && fName.trim().length() > 0 &&lName.trim().length() > 0 && !id.isEmpty() && !email.isEmpty() &&
+                !password.isEmpty() && !confirmPass.isEmpty() && password.equals(confirmPass) && password.length() >= 6) {
+            if(!email.contains("@")){
+                Toast.makeText(this, "Email needs to have the @ symbol", Toast.LENGTH_SHORT).show();
+                return false;
+            }
             return true;
         } else if (password.length() < 6) {
             Toast.makeText(Register.this, "Passwords must be 6 numbers or longer!", Toast.LENGTH_SHORT).show();
-        } else if(id.length()<9|| id.length()>9){
-            Toast.makeText(Register.this, "Saint Rose ID#s are 9 digits long", Toast.LENGTH_SHORT).show();
-        }else if (!password.equals(confirmPass)) {
+        } else if (!password.equals(confirmPass)) {
             Toast.makeText(Register.this, "Passwords do not match!", Toast.LENGTH_SHORT).show();
-        } else {
-            Toast.makeText(Register.this, "All fields must be filled!", Toast.LENGTH_SHORT).show();
+        } else if (fName.trim().length() == 0 || lName.trim().length() == 0){
+            Toast.makeText(this, "First name and/or Last name cannot be empty", Toast.LENGTH_SHORT).show();
+        } else if(fName.isEmpty() || lName.isEmpty() || id.isEmpty() || email.isEmpty() || password.isEmpty() || confirmPass.isEmpty()){
+            Toast.makeText(this, "All fields must be filled!", Toast.LENGTH_SHORT).show();
+        }
+        else {
+            Toast.makeText(Register.this, "Must be a Saint Rose email!", Toast.LENGTH_SHORT).show();
         }
         return false;
     }
+
+    public boolean validateEmail(String ogEmail){
+        String [] separate = ogEmail.split("@");
+        String testEmail = separate[1];
+        if(testEmail.equalsIgnoreCase("strose.edu")){
+            return true;
+        }
+        return false;
+    }
+
 }
