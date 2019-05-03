@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -59,13 +58,14 @@ public class OtherProfile extends AppCompatActivity {
         currentUserId=currentFirebaseUser.getUid();//retrieves user id of signed in user
 
         SharedPreferences sharedPref=getSharedPreferences("OtherId", Context.MODE_PRIVATE);
-        otherUserId=sharedPref.getString("id","");
+        otherUserId=sharedPref.getString("id","");//retirieves the user they clicked on
         final DatabaseReference rootRef2 = FirebaseDatabase.getInstance().getReference();
-        Query otherQuery = rootRef2.child("users").orderByChild("userId").equalTo(otherUserId);//finds the user in the database
+        Query otherQuery = rootRef2.child("users").orderByChild("userId").equalTo(otherUserId);//finds the other user in the database
 
         ValueEventListener valueEventListener2 = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                //all are blank just in case other user has blanks in their profile
                 String fName=" ";
                 String lName=" ";
                 String bio=" ";
@@ -82,10 +82,11 @@ public class OtherProfile extends AppCompatActivity {
                     year= (String) ds.child("year").getValue();//retrieves year
                     major= (String) ds.child("major").getValue();//retrieves major
                     location=(String) ds.child("location").getValue();
+                    //retrieves photo
                     StorageReference storageReference = FirebaseStorage.getInstance().getReference();
                     StorageReference photoReference= storageReference.child(id).child("image");
                     userPic = (ImageView)findViewById(R.id.userPic);
-                    final long ONE_MEGABYTE = 3000 * 3000;
+                    final long ONE_MEGABYTE = 4000 * 4000;//size of photo
                     photoReference.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
                         @Override
                         public void onSuccess(byte[] bytes) {
@@ -106,23 +107,24 @@ public class OtherProfile extends AppCompatActivity {
                 yearText.setText(year);//sets year
                 majorText.setText(major);//sets major
                 locationText.setText(location);//sets location
+                //finds the current user in the database to check if the other user is in their friend's list
                 final DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
-                Query currentQuery = rootRef.child("users").orderByChild("userId").equalTo(currentUserId);//finds the user in the database
+                Query currentQuery = rootRef.child("users").orderByChild("userId").equalTo(currentUserId);
                 ValueEventListener valueEventListener = new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
 
                         for(DataSnapshot ds : dataSnapshot.getChildren()) {
-                            String id = (String) ds.getKey();//retrieves user's id to know where to put info into profile
+                            String id = (String) ds.getKey();//gets current user's id
                             currentUserId=id;
                         }
                         mDatabase = FirebaseDatabase.getInstance().getReference().child("users").child(currentUserId).child("flist");
                         mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
                             final boolean[] checked = new boolean[1];
-
+                            //decides what to set the follow button to
                             @Override
                             public void onDataChange(@NonNull DataSnapshot snapShot) {
-                                if (snapShot.hasChild(otherUserId)) {//checks to see if another user has an the same id
+                                if (snapShot.hasChild(otherUserId)) {
                                     checked[0] = true;
                                     followButton.setText("Unfollow");
                                 }
@@ -157,15 +159,29 @@ public class OtherProfile extends AppCompatActivity {
         followButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if((followButton.getText().toString()).equals("Follow")){
+                if ((followButton.getText().toString()).equals("Follow")) {//if user chooses to follow other user they will be added to their follow list in database
                     mDatabase = FirebaseDatabase.getInstance().getReference().child("users").child(currentUserId).child("flist").child(otherUserId);
                     mDatabase.setValue(otherUserId);
                     followButton.setText("Unfollow");
+                } else {//if user chooses to unfollow other user will be removed from current user's follow list
+                    mDatabase = FirebaseDatabase.getInstance().getReference().child("users").child(currentUserId).child("flist").child(otherUserId);
+                    mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapShot) {
+                                mDatabase.removeValue();
+                                followButton.setText("Follow");
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    });
                 }
             }
         });
     }
-
 
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
