@@ -22,9 +22,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
-import com.firebase.ui.database.SnapshotParser;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
@@ -34,21 +33,17 @@ public class FriendSearch extends AppCompatActivity {
     private EditText mSearchField;
     private ImageButton mSearchBtn;
     private RecyclerView mResultList;
-    private DatabaseReference mUserDatabase;
     private LinearLayoutManager linearLayoutManager;
     private FirebaseRecyclerAdapter adapter;
     private FirebaseAuth firebaseAuth;
+    private String currentUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.friend_search);
-
-        mUserDatabase = FirebaseDatabase.getInstance().getReference("Users");
-
         mSearchField = (EditText) findViewById(R.id.search_field);
         mSearchBtn = (ImageButton) findViewById(R.id.search_btn);
-
         mResultList = (RecyclerView) findViewById(R.id.result_list);
         mResultList.setHasFixedSize(true);
         mResultList.setLayoutManager(new LinearLayoutManager(this));
@@ -57,9 +52,9 @@ public class FriendSearch extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 String searchText = mSearchField.getText().toString().toLowerCase();
-                if(searchText.equals("")){
+                if(searchText.equals("")){//displays all users if user enters 1 space
                     fetch();
-                }else {
+                }else {//searches for users
                     firebaseUserSearch(searchText);
                 }
             }
@@ -67,51 +62,50 @@ public class FriendSearch extends AppCompatActivity {
         linearLayoutManager = new LinearLayoutManager(this);
         mResultList.setLayoutManager(linearLayoutManager);
         mResultList.setHasFixedSize(true);
-        fetch();
-
+        fetch();//retrieves all users
     }
 
     private void firebaseUserSearch(String searchText) {
-
+        FirebaseUser currentFirebaseUser = FirebaseAuth.getInstance().getCurrentUser() ;
+        currentUser=currentFirebaseUser.getUid();//retrieves user id of signed in user
         final DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
         Query query = rootRef.child("users").orderByChild("fNameS").equalTo(searchText);
         //tells firebase where to begin retrieving user data
-
         FirebaseRecyclerOptions<User> options =
                 new FirebaseRecyclerOptions.Builder<User>()
                         .setQuery(query, User.class)
                         .setLifecycleOwner(this)
                         .build();
-
         adapter = new FirebaseRecyclerAdapter<User, ViewHolder>(options) {
             @Override
             protected void onBindViewHolder(@NonNull ViewHolder holder, int position, @NonNull final User model) {
-                String fullName=model.getfName()+ " "+model.getlName();
-
-                holder.setTxtName(fullName,model.getMajor(),model.getLocation(),model.getYear());
-
-                holder.root.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-
-                        SharedPreferences sharedPref= getSharedPreferences("OtherId", Context.MODE_PRIVATE);
-                        SharedPreferences.Editor editor=sharedPref.edit();
-                        editor.putString("id",model.getUserId().toString());
-                        editor.apply();
-                        startActivity(new Intent(FriendSearch.this, OtherProfile.class));
-
-
-                    }
-                });
+                if(!currentUser.equals(model.getUserId())) {//to make sure the current user does not pop up in search
+                    String fullName = model.getfName() + " " + model.getlName();
+                    holder.setTxtName(fullName, model.getMajor(), model.getLocation(), model.getYear());
+                    holder.root.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            SharedPreferences sharedPref = getSharedPreferences("OtherId", Context.MODE_PRIVATE);
+                            SharedPreferences.Editor editor = sharedPref.edit();
+                            editor.putString("id", model.getUserId().toString());
+                            editor.apply();
+                            startActivity(new Intent(FriendSearch.this, OtherProfile.class));
+                        }
+                    });
+                }
+                else{//hides current user from display
+                            holder.root.setVisibility(View.GONE);
+                }
             }
 
             @NonNull
             @Override
             public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-                View view = LayoutInflater.from(parent.getContext())
-                        .inflate(R.layout.friend_search_card, parent, false);
-                return new ViewHolder(view);
-            }
+
+                    View view = LayoutInflater.from(parent.getContext())
+                            .inflate(R.layout.friend_search_card, parent, false);
+                    return new ViewHolder(view);
+                }
         };
 
         mResultList.setAdapter(adapter);
@@ -119,11 +113,12 @@ public class FriendSearch extends AppCompatActivity {
     }
 
     private void fetch() {
+        FirebaseUser currentFirebaseUser = FirebaseAuth.getInstance().getCurrentUser() ;
+        currentUser=currentFirebaseUser.getUid();//retrieves user id of signed in user
         Query query = FirebaseDatabase.getInstance()
                 .getReference()
                 .child("users")
                 .orderByChild("id");//tells firebase where to begin retrieving user data
-
         FirebaseRecyclerOptions<User> options =
                 new FirebaseRecyclerOptions.Builder<User>()
                         .setQuery(query, User.class)
@@ -131,25 +126,26 @@ public class FriendSearch extends AppCompatActivity {
                         .build();
 
         adapter = new FirebaseRecyclerAdapter<User, ViewHolder>(options) {
+
             @Override
             protected void onBindViewHolder(@NonNull ViewHolder holder, int position, @NonNull final User model) {
-                String fullName=model.getfName()+ " "+model.getlName();
-
-                holder.setTxtName(fullName,model.getMajor(),model.getLocation(),model.getYear());
-
-                holder.root.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-
-                        SharedPreferences sharedPref= getSharedPreferences("OtherId", Context.MODE_PRIVATE);
-                        SharedPreferences.Editor editor=sharedPref.edit();
-                        editor.putString("id",model.getUserId().toString());
-                        editor.apply();
-                        startActivity(new Intent(FriendSearch.this, OtherProfile.class));
-
-
-                    }
-                });
+                if(!currentUser.equals(model.getUserId())) {//so current user is not displayed
+                    String fullName = model.getfName() + " " + model.getlName();
+                    holder.setTxtName(fullName, model.getMajor(), model.getLocation(), model.getYear());
+                    holder.root.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            SharedPreferences sharedPref = getSharedPreferences("OtherId", Context.MODE_PRIVATE);
+                            SharedPreferences.Editor editor = sharedPref.edit();
+                            editor.putString("id", model.getUserId().toString());
+                            editor.apply();
+                            startActivity(new Intent(FriendSearch.this, OtherProfile.class));
+                        }
+                    });
+                }
+                else{//hides current user form search
+                    holder.root.setVisibility(View.GONE);
+                }
             }
 
             @NonNull
@@ -187,6 +183,7 @@ public class FriendSearch extends AppCompatActivity {
             location.setText(string3);
             year.setText(string4);
         }
+
     }
 
     @Override
