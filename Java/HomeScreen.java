@@ -6,6 +6,7 @@ package com.example.dinr;
  * This is the home screen for the DINR application
  */
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Canvas;
@@ -33,6 +34,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,6 +43,7 @@ public class HomeScreen extends AppCompatActivity implements Home_Screen_Adapter
     private FirebaseAuth firebaseAuth;
     private TextView greeting;
     private String userId;
+    private TextView locationText;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,17 +62,25 @@ public class HomeScreen extends AppCompatActivity implements Home_Screen_Adapter
         userId=currentFirebaseUser.getUid();
         final DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
         Query query = rootRef.child("users").orderByChild("userId").equalTo(userId);
-
+        locationText=findViewById(R.id.location);
         ValueEventListener valueEventListener = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 String fName="";
+                String location="";
                 for(DataSnapshot ds : dataSnapshot.getChildren()) {
                     fName= (String) ds.child("fName").getValue();
+                    location= (String) ds.child("location").getValue();
                 }
 
                 greeting = findViewById(R.id.home_screenTV);
                 greeting.setText("Welcome, " + fName);
+                if(location.equals("Offline")){
+                    locationText.setText("You are currently offline");
+                }else{
+                    locationText.setText("Your current location is "+location);
+                }
+
             }
 
             @Override
@@ -94,7 +106,7 @@ public class HomeScreen extends AppCompatActivity implements Home_Screen_Adapter
         firebaseAuth = firebaseAuth.getInstance();
         switch (item.getItemId()){
             case R.id.Settings:
-               startActivity(new Intent(HomeScreen.this, Settings.class));
+                startActivity(new Intent(HomeScreen.this, Settings.class));
                 return true;
             case R.id.Logout:
                 Toast.makeText(HomeScreen.this, "Logging Out...", Toast.LENGTH_SHORT).show();
