@@ -181,7 +181,7 @@ public class Register extends AppCompatActivity {
         } else if(id.length() < 9 || id.length() > 9){
             Toast.makeText(this, "Saint Rose's ID numbers are 9 digits long!", Toast.LENGTH_SHORT).show();
         }
-        else {
+        else if (!validateEmail(email)){
             Toast.makeText(Register.this, "Must be a Saint Rose email!", Toast.LENGTH_SHORT).show();
         }
         return false;
