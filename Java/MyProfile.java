@@ -142,14 +142,15 @@ public class MyProfile extends AppCompatActivity {
         builder2.setItems(items, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                final String location=items[which];
+                final String location = items[which];
+                if(!location.equals("Offline")){
                 AlertDialog.Builder builder = new AlertDialog.Builder(MyProfile.this);//second alert box
                 builder.setTitle("How long do you plan on being there?");
                 builder.setItems(timeW, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         int timer = timeN[which];//retrieves the corresponding number with word
-                        timer=timer*10000;//converts to milliseconds
+                        timer = timer * 10000;//converts to milliseconds
 
                         final Handler handler = new Handler();
                         handler.postDelayed(new Runnable() {
@@ -172,13 +173,21 @@ public class MyProfile extends AppCompatActivity {
                             }
                         }, timer);
                         locationWord.setText(location);//changes location
-                        editUser(userId,location);
+                        editUser(userId, location);
                     }
                 });
                 builder.show();
             }
+            else {//if offline is chosen skips second alert
+                    locationWord.setText(location);//changes location
+                    editUser(userId, location);
+                }
+            }
         });
         builder2.show();
+    }
+    public void alert2 (){
+
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {
