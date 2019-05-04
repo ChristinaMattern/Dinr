@@ -162,7 +162,7 @@ public class Register extends AppCompatActivity {
 
     private Boolean validate(String fName, String lName, final String id, String email, String password, String confirmPass) {
         if (!fName.isEmpty() && !lName.isEmpty() && fName.trim().length() > 0 &&lName.trim().length() > 0 && !id.isEmpty() && !email.isEmpty() &&
-                !password.isEmpty() && !confirmPass.isEmpty() && password.equals(confirmPass) && password.length() >= 6 && id.length() == 9) {
+                !password.isEmpty() && !confirmPass.isEmpty() && password.equals(confirmPass) && password.length() >= 6 && id.length() == 9 && validateEmail(email)) {
             if(!email.contains("@")){
                 Toast.makeText(this, "Email needs to have the @ symbol", Toast.LENGTH_SHORT).show();
                 return false;
