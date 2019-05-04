@@ -35,10 +35,8 @@ import java.io.ByteArrayOutputStream;
 
 public class Register extends AppCompatActivity {
     private DatabaseReference mDatabase;
-    private DataSnapshot databaseRef;
     private Button registerButton;
     private EditText newUserFirstName, newUserLastName, studentID, studentEmail, newUserPassword, confirmPassword;
-    private TextView missingInfo;
     private FirebaseAuth firebaseAuth;
     private ImageView userPic;
     @Override
