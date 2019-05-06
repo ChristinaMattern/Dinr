@@ -1,14 +1,5 @@
 <resources>
     <string name="app_name">DINR</string>
-    <string name="Question2"><b><big>How do I let others know I am currently waiting to meet others?\n </big></b> <br></br>
-        <br>On your profile beneath your name there is a location list where you can choose where you are currently located or if you are offline, so when others click on your profile they will see and you will appear in the search in that location and if you are waiting.</br>
-</string>
-    <string name="Question4"><b><big>How do I change my password?\n </big></b> <br></br><br>"Go to settings and select Change Password. You will be asked to create a new password and brought to the login screen."</br> </string>
-    <string name="Question3"><b><big> How do I log out?\n</big></b> <br></br>
-        <br>Click on the three dots on the top bar, then click log out.</br></string>
-
-    <string name="Question1"><b><big>How do I change my profile picture?\n  </big></b><br></br><br>Go to edit your profile and click on the picture and you will be asked to select a photo from your library.</br> </string>
-
     <string name="title_activity_search">Search</string>
     <string name="title_activity_other_profile">OtherProfile</string>
     <string name="title_activity_friend_search">FriendSearch</string>
