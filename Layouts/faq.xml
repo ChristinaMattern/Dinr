@@ -1,117 +1,269 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--@author Nola Smtih
-    @date 4/3/2019-->
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<!--@author Nola Smtih & Angela Cebada
+    @created 4/3/2019
+    @updated 5/6/2019-->
+
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     android:background="#D8D8D8"
     tools:context=".Faq">
 
-    <TextView
-        android:id="@+id/title"
-        android:layout_width="158dp"
-        android:layout_height="36dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginBottom="8dp"
-        android:textSize="20sp"
-        android:textAlignment="center"
-        android:textColor="#5A5A5A"
-        android:textStyle="bold"
-        android:text="Help Screen"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.00999999"
-        tools:text="Help Screen" />
+    <LinearLayout
+        android:id="@+id/container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/Q1"
-        android:layout_width="340dp"
-        android:layout_height="88dp"
-        android:layout_marginStart="24dp"
-        android:layout_marginLeft="24dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="24dp"
-        android:layout_marginRight="24dp"
-        android:layout_marginBottom="8dp"
-        android:text="@string/Question1"
-        android:textColor="#5A5A5A"
-        android:textSize="14sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.51"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/title"
-        app:layout_constraintVertical_bias="0.060000002"
-        tools:text="@string/Question1" />
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="393dp"
+            android:layout_height="36dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginBottom="8dp"
+            android:fontFamily="sans-serif"
+            android:text="Frequently Asked Questions"
+            android:textAlignment="center"
+            android:textColor="#5A5A5A"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.00999999" />
 
-    <TextView
-        android:id="@+id/Q2"
-        android:layout_width="340dp"
-        android:layout_height="147dp"
-        android:layout_marginStart="24dp"
-        android:layout_marginLeft="24dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="24dp"
-        android:layout_marginRight="24dp"
-        android:layout_marginBottom="8dp"
-        android:text="@string/Question2"
-        android:textColor="#5A5A5A"
-        android:textSize="14sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.51"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/Q1"
-        app:layout_constraintVertical_bias="0.060000002"
-        tools:text="@string/Question2" />
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <com.ms.square.android.expandabletextview.ExpandableTextView
+            android:id="@+id/expandable_text_view1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:maxCollapsedLines="1"
+            app:animDuration="200">
 
-    <TextView
-        android:id="@+id/Q3"
-        android:layout_width="340dp"
-        android:layout_height="79dp"
-        android:layout_marginStart="24dp"
-        android:layout_marginLeft="24dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="24dp"
-        android:layout_marginRight="24dp"
-        android:layout_marginBottom="8dp"
-        android:text="@string/Question3"
-        android:textColor="#5A5A5A"
-        android:textSize="14sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.51"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/Q2"
-        app:layout_constraintVertical_bias="0.060000002"
-        tools:text="@string/Question3" />
+            <TextView
+                android:id="@+id/expandable_text"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="8dp"
+                android:background="@color/common_google_signin_btn_text_light_disabled"
+                android:padding="16dp"
+                android:textColor="#123"
+                android:textSize="16sp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
 
-    <TextView
-        android:id="@+id/Q4"
-        android:layout_width="322dp"
-        android:layout_height="120dp"
-        android:layout_marginStart="185dp"
-        android:layout_marginLeft="185dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="167dp"
-        android:layout_marginRight="167dp"
-        android:text="@string/Question4"
-        android:textColor="#5A5A5A"
-        android:textSize="14sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.566"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/Q3"
-        app:layout_constraintVertical_bias="0.052"
-        tools:text="@string/Question4" />
+            <ImageButton
+                android:id="@+id/expand_collapse"
+                android:layout_gravity="right|center"
+                android:background="@android:color/transparent"
+                android:padding="16dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
 
-</android.support.constraint.ConstraintLayout>
+        </com.ms.square.android.expandabletextview.ExpandableTextView>
+    </ScrollView>
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <com.ms.square.android.expandabletextview.ExpandableTextView
+            android:id="@+id/expandable_text_view2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:maxCollapsedLines="2"
+            app:animDuration="200">
+
+            <TextView
+                android:id="@+id/expandable_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginRight="10dp"
+                android:background="@color/common_google_signin_btn_text_light_disabled"
+                android:padding="16dp"
+                android:textColor="#123"
+                android:textSize="16sp" />
+
+            <ImageButton
+                android:id="@+id/expand_collapse"
+                android:layout_gravity="right|center"
+                android:background="@android:color/transparent"
+                android:padding="16dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+        </com.ms.square.android.expandabletextview.ExpandableTextView>
+    </ScrollView>
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <com.ms.square.android.expandabletextview.ExpandableTextView
+            android:id="@+id/expandable_text_view3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:maxCollapsedLines="1"
+            app:animDuration="200">
+
+            <TextView
+                android:id="@+id/expandable_text"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="8dp"
+                android:background="@color/common_google_signin_btn_text_light_disabled"
+                android:padding="16dp"
+                android:textColor="#123"
+                android:textSize="16sp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <ImageButton
+                android:id="@+id/expand_collapse"
+                android:layout_gravity="right|center"
+                android:background="@android:color/transparent"
+                android:padding="16dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+        </com.ms.square.android.expandabletextview.ExpandableTextView>
+    </ScrollView>
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <com.ms.square.android.expandabletextview.ExpandableTextView
+            android:id="@+id/expandable_text_view4"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:maxCollapsedLines="1"
+            app:animDuration="200">
+
+            <TextView
+                android:id="@+id/expandable_text"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="8dp"
+                android:background="@color/common_google_signin_btn_text_light_disabled"
+                android:padding="16dp"
+                android:textColor="#123"
+                android:textSize="16sp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <ImageButton
+                android:id="@+id/expand_collapse"
+                android:layout_gravity="right|center"
+                android:background="@android:color/transparent"
+                android:padding="16dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+        </com.ms.square.android.expandabletextview.ExpandableTextView>
+    </ScrollView>
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <com.ms.square.android.expandabletextview.ExpandableTextView
+            android:id="@+id/expandable_text_view5"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:maxCollapsedLines="1"
+            app:animDuration="200">
+
+            <TextView
+                android:id="@+id/expandable_text"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="8dp"
+                android:background="@color/common_google_signin_btn_text_light_disabled"
+                android:padding="16dp"
+                android:textColor="#123"
+                android:textSize="16sp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <ImageButton
+                android:id="@+id/expand_collapse"
+                android:layout_gravity="right|center"
+                android:background="@android:color/transparent"
+                android:padding="16dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+        </com.ms.square.android.expandabletextview.ExpandableTextView>
+    </ScrollView>
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <com.ms.square.android.expandabletextview.ExpandableTextView
+            android:id="@+id/expandable_text_view6"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:maxCollapsedLines="1"
+            app:animDuration="200">
+
+            <TextView
+                android:id="@+id/expandable_text"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="8dp"
+                android:background="@color/common_google_signin_btn_text_light_disabled"
+                android:padding="16dp"
+                android:textColor="#123"
+                android:textSize="16sp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <ImageButton
+                android:id="@+id/expand_collapse"
+                android:layout_gravity="right|center"
+                android:background="@android:color/transparent"
+                android:padding="16dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+        </com.ms.square.android.expandabletextview.ExpandableTextView>
+    </ScrollView>
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <com.ms.square.android.expandabletextview.ExpandableTextView
+            android:id="@+id/expandable_text_view7"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:maxCollapsedLines="1"
+            app:animDuration="200">
+
+            <TextView
+                android:id="@+id/expandable_text"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="8dp"
+                android:background="@color/common_google_signin_btn_text_light_disabled"
+                android:padding="16dp"
+                android:textColor="#123"
+                android:textIsSelectable="true"
+                android:textSize="16sp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <ImageButton
+                android:id="@+id/expand_collapse"
+                android:layout_gravity="right|center"
+                android:background="@android:color/transparent"
+                android:padding="16dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+        </com.ms.square.android.expandabletextview.ExpandableTextView>
+    </ScrollView>
+</LinearLayout>
+</ScrollView>
