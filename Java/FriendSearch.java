@@ -56,6 +56,9 @@ public class FriendSearch extends AppCompatActivity {
                     fetch();
                 }else {//searches for users
                     firebaseUserSearch(searchText);
+                    if(adapter.getItemCount()==0){
+                        Toast.makeText(FriendSearch.this, "User not found...", Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
         });
@@ -94,7 +97,7 @@ public class FriendSearch extends AppCompatActivity {
                     });
                 }
                 else{//hides current user from display
-                            holder.root.setVisibility(View.GONE);
+                    holder.root.setVisibility(View.GONE);
                 }
             }
 
@@ -102,10 +105,10 @@ public class FriendSearch extends AppCompatActivity {
             @Override
             public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
-                    View view = LayoutInflater.from(parent.getContext())
-                            .inflate(R.layout.friend_search_card, parent, false);
-                    return new ViewHolder(view);
-                }
+                View view = LayoutInflater.from(parent.getContext())
+                        .inflate(R.layout.friend_search_card, parent, false);
+                return new ViewHolder(view);
+            }
         };
 
         mResultList.setAdapter(adapter);
