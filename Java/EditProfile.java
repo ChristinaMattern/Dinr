@@ -151,52 +151,56 @@ public class EditProfile extends AppCompatActivity {
                 final String yearText = ((RadioButton) findViewById(rg.getCheckedRadioButtonId())).getText().toString();
                 final String bio = bioTextNew.getText().toString();
                 final String major = majorTextNew.getText().toString();
-                FirebaseUser currentFirebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-                userId = currentFirebaseUser.getUid();//retrieves current user
-                final DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
-                FirebaseStorage storage = FirebaseStorage.getInstance();
-                final StorageReference storageRef = storage.getReference();
-                StorageReference imagesRef = storageRef.child("images");
-                final Query query = rootRef.child("users").orderByChild("userId").equalTo(userId);//finds user in database
-                query.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        //edits the user's profile
-                        for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                            try {
-                                String id = (String) ds.getKey();//retrieves user's id to know where to put info into profile
-                                StorageReference imagesRef = storageRef.child(id).child("image");
-                                userPic.setDrawingCacheEnabled(true);
-                                userPic.buildDrawingCache();
-                                Bitmap bitmap = ((BitmapDrawable) userPic.getDrawable()).getBitmap();
-                                ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                                bitmap.compress(Bitmap.CompressFormat.JPEG, 60, baos);
-                                byte[] data = baos.toByteArray();
-                                UploadTask uploadTask = imagesRef.putBytes(data);
-                                uploadTask.addOnFailureListener(new OnFailureListener() {
-                                    @Override
-                                    public void onFailure(@NonNull Exception exception) {
-                                        // Handle unsuccessful uploads
-                                    }
-                                }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                                    @Override
-                                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                                        // taskSnapshot.getMetadata() contains file metadata such as size, content-type, etc.
-                                    }
-                                });
-                                editUser(id, bio, yearText, major);
-                            }catch (NullPointerException e){
-                                Toast.makeText(EditProfile.this, "No picture chosen", Toast.LENGTH_SHORT).show();
+                if (containsNumber(major)) {
+                    Toast.makeText(EditProfile.this, "Major cannot contain digits!", Toast.LENGTH_SHORT).show();
+                } else {
+                    FirebaseUser currentFirebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+                    userId = currentFirebaseUser.getUid();//retrieves current user
+                    final DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
+                    FirebaseStorage storage = FirebaseStorage.getInstance();
+                    final StorageReference storageRef = storage.getReference();
+                    StorageReference imagesRef = storageRef.child("images");
+                    final Query query = rootRef.child("users").orderByChild("userId").equalTo(userId);//finds user in database
+                    query.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            //edits the user's profile
+                            for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                                try {
+                                    String id = (String) ds.getKey();//retrieves user's id to know where to put info into profile
+                                    StorageReference imagesRef = storageRef.child(id).child("image");
+                                    userPic.setDrawingCacheEnabled(true);
+                                    userPic.buildDrawingCache();
+                                    Bitmap bitmap = ((BitmapDrawable) userPic.getDrawable()).getBitmap();
+                                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                                    bitmap.compress(Bitmap.CompressFormat.JPEG, 60, baos);
+                                    byte[] data = baos.toByteArray();
+                                    UploadTask uploadTask = imagesRef.putBytes(data);
+                                    uploadTask.addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception exception) {
+                                            // Handle unsuccessful uploads
+                                        }
+                                    }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                                        @Override
+                                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                            // taskSnapshot.getMetadata() contains file metadata such as size, content-type, etc.
+                                        }
+                                    });
+                                    editUser(id, bio, yearText, major);
+                                } catch (NullPointerException e) {
+                                    Toast.makeText(EditProfile.this, "No picture chosen", Toast.LENGTH_SHORT).show();
+                                }
                             }
-                        }
 
                         }
 
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
 
-                    }
-                });
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    });
                     final Handler handler = new Handler();
                     handler.postDelayed(new Runnable() {
                         @Override
@@ -206,6 +210,7 @@ public class EditProfile extends AppCompatActivity {
                             startActivity(new Intent(EditProfile.this, MyProfile.class));
                         }
                     }, 3000);//delays opening for 3 seconds to allow firebase to update
+                }
             }
         });
         userPic.setOnClickListener(new View.OnClickListener() {
@@ -219,6 +224,12 @@ public class EditProfile extends AppCompatActivity {
                     startActivityForResult(Intent.createChooser(intent, "Select Picture"), GALLERY);
             }
         });
+    }
+    public boolean containsNumber(String s){
+        if (s.matches(".*\\d+.*")){
+            return true;
+        }
+        return false;
     }
 
     //adds user's profile to database
