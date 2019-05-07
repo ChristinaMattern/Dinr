@@ -137,6 +137,9 @@ public class EditProfile extends AppCompatActivity {
                 if(year.equals("Graduate")) {
                     ((RadioButton) yearTextOld.getChildAt(4)).setChecked(true);
                 }
+                if(year.equals("Faculty")){
+                    ((RadioButton)yearTextOld.getChildAt(5)).setChecked(true);
+                }
             }
 
             @Override
