@@ -35,8 +35,10 @@ import java.io.ByteArrayOutputStream;
 
 public class Register extends AppCompatActivity {
     private DatabaseReference mDatabase;
+    private DataSnapshot databaseRef;
     private Button registerButton;
     private EditText newUserFirstName, newUserLastName, studentID, studentEmail, newUserPassword, confirmPassword;
+    private TextView missingInfo;
     private FirebaseAuth firebaseAuth;
     private ImageView userPic;
     @Override
@@ -138,7 +140,6 @@ public class Register extends AppCompatActivity {
 
     }
 
-
     //adds user to database
     private void writeNewUser(String userId, String id, String fName, String lName, String email, String password,String fNameS) {
 
@@ -154,11 +155,11 @@ public class Register extends AppCompatActivity {
         mDatabase.child("users").child(id).child("year").setValue(" ");
         mDatabase.child("users").child(id).child("fNameS").setValue(fNameS);
         mDatabase.child("users").child(id).child("flist").setValue(" ");
+        mDatabase.child("users").child(id).child("locationTime").setValue(" ");
 
 
 
     }
-
 
     private Boolean validate(String fName, String lName, final String id, String email, String password, String confirmPass) {
         if (!fName.isEmpty() && !lName.isEmpty() && fName.trim().length() > 0 &&lName.trim().length() > 0 && !id.isEmpty() && !email.isEmpty() &&
@@ -179,7 +180,7 @@ public class Register extends AppCompatActivity {
         } else if(id.length() < 9 || id.length() > 9){
             Toast.makeText(this, "Saint Rose's ID numbers are 9 digits long!", Toast.LENGTH_SHORT).show();
         }
-        else if (!validateEmail(email)){
+        else if(!validateEmail(email)){
             Toast.makeText(Register.this, "Must be a Saint Rose email!", Toast.LENGTH_SHORT).show();
         }
         return false;
