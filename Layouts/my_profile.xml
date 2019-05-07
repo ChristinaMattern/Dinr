@@ -198,10 +198,10 @@
             android:text="Location"
             app:layout_constraintBottom_toTopOf="@+id/bioWord"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.58"
+            app:layout_constraintHorizontal_bias="0.596"
             app:layout_constraintStart_toEndOf="@+id/yearWord"
             app:layout_constraintTop_toBottomOf="@+id/fullName"
-            app:layout_constraintVertical_bias="0.49" />
+            app:layout_constraintVertical_bias="0.192" />
 
         <Button
             android:id="@+id/location"
@@ -237,6 +237,22 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/bioWord"
             app:layout_constraintVertical_bias="0.166" />
+
+        <TextView
+            android:id="@+id/locationTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginBottom="8dp"
+            app:layout_constraintBottom_toTopOf="@+id/location"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/yearText"
+            app:layout_constraintTop_toBottomOf="@+id/locationWord"
+            tools:text="Location Time" />
 
     </android.support.constraint.ConstraintLayout>
 </ScrollView>
