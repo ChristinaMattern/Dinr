@@ -35,6 +35,9 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+
 public class MyProfile extends AppCompatActivity {
     private DatabaseReference mDatabase;
     private TextView fullName;
@@ -144,41 +147,44 @@ public class MyProfile extends AppCompatActivity {
             public void onClick(DialogInterface dialog, int which) {
                 final String location = items[which];
                 if(!location.equals("Offline")){
-                AlertDialog.Builder builder = new AlertDialog.Builder(MyProfile.this);//second alert box
-                builder.setTitle("How long do you plan on being there?");
-                builder.setItems(timeW, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        int timer = timeN[which];//retrieves the corresponding number with word
-                        timer = timer * 10000;//converts to milliseconds
+                    AlertDialog.Builder builder = new AlertDialog.Builder(MyProfile.this);//second alert box
+                    builder.setTitle("How long do you plan on being there?");
+                    builder.setItems(timeW, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            int timer = timeN[which];//retrieves the corresponding number with word
+                            timer = timer * 10000;//converts to milliseconds
+                            Calendar calendar = Calendar.getInstance();
+                            SimpleDateFormat format = new SimpleDateFormat("HH:mm:ss");
+                            Toast.makeText(MyProfile.this, "Current Time: " + format.format(calendar.getTime()), Toast.LENGTH_SHORT).show();
 
-                        final Handler handler = new Handler();
-                        handler.postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                locationWord.setText("Offline");
-                                NotificationCompat.Builder b = new NotificationCompat.Builder(MyProfile.this);
-                                b.setAutoCancel(true)
-                                        .setDefaults(NotificationCompat.DEFAULT_ALL)
-                                        .setWhen(System.currentTimeMillis())
-                                        .setSmallIcon(R.drawable.test_icon)
-                                        .setTicker("Are you still at your location?")
-                                        .setContentTitle("Are You Still There?")
-                                        .setContentText("The amount of time you said " +
-                                                "you would be at your location has been reach. You are being put offline until you " +
-                                                "update your time and location on your profile.")
-                                        .setContentInfo("INFO");
-                                NotificationManager nm = (NotificationManager) MyProfile.this.getSystemService(Context.NOTIFICATION_SERVICE);
-                                nm.notify(1, b.build());
-                            }
-                        }, timer);
-                        locationWord.setText(location);//changes location
-                        editUser(userId, location);
-                    }
-                });
-                builder.show();
-            }
-            else {//if offline is chosen skips second alert
+                            final Handler handler = new Handler();
+                            handler.postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    locationWord.setText("Offline");
+                                    NotificationCompat.Builder b = new NotificationCompat.Builder(MyProfile.this);
+                                    b.setAutoCancel(true)
+                                            .setDefaults(NotificationCompat.DEFAULT_ALL)
+                                            .setWhen(System.currentTimeMillis())
+                                            .setSmallIcon(R.drawable.test_icon)
+                                            .setTicker("Are you still at your location?")
+                                            .setContentTitle("Are You Still There?")
+                                            .setContentText("The amount of time you said " +
+                                                    "you would be at your location has been reach. You are being put offline until you " +
+                                                    "update your time and location on your profile.")
+                                            .setContentInfo("INFO");
+                                    NotificationManager nm = (NotificationManager) MyProfile.this.getSystemService(Context.NOTIFICATION_SERVICE);
+                                    nm.notify(1, b.build());
+                                }
+                            }, timer);
+                            locationWord.setText(location);//changes location
+                            editUser(userId, location);
+                        }
+                    });
+                    builder.show();
+                }
+                else {//if offline is chosen skips second alert
                     locationWord.setText(location);//changes location
                     editUser(userId, location);
                 }
