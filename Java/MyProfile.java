@@ -34,9 +34,10 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 
 public class MyProfile extends AppCompatActivity {
     private DatabaseReference mDatabase;
@@ -50,6 +51,7 @@ public class MyProfile extends AppCompatActivity {
     private FirebaseAuth firebaseAuth;
     private Button locationB;
     private TextView locationWord;
+    private TextView locationTime;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +64,7 @@ public class MyProfile extends AppCompatActivity {
         editButton = (Button)findViewById(R.id.editButton);
         locationWord = (TextView)findViewById(R.id.locationWord);
         locationB = (Button)findViewById(R.id.location);
+        locationTime=(TextView)findViewById(R.id.locationTime);
         FirebaseUser currentFirebaseUser = FirebaseAuth.getInstance().getCurrentUser() ;
         userId=currentFirebaseUser.getUid();//retrieves user id of signed in user
         final DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
@@ -77,6 +80,7 @@ public class MyProfile extends AppCompatActivity {
                 String year=" ";
                 String major=" ";
                 String location=" ";
+                String locationTimeD=" ";
                 for(DataSnapshot ds : dataSnapshot.getChildren()) {
                     String id = (String) ds.getKey();//retrieves user's id to know where to put info into profile
                     userId=id;
@@ -86,11 +90,12 @@ public class MyProfile extends AppCompatActivity {
                     year= (String) ds.child("year").getValue();//retrieves year
                     major= (String) ds.child("major").getValue();//retrieves major
                     location=(String) ds.child("location").getValue();//retrieves location
+                    locationTimeD=(String)ds.child("locationTime").getValue();//retrieves location time
                     //retrieves the photo
                     StorageReference storageReference = FirebaseStorage.getInstance().getReference();
                     StorageReference photoReference= storageReference.child(id).child("image");
                     userPic = (ImageView)findViewById(R.id.userPic);
-                    final long ONE_MEGABYTE = 4000 * 4000;
+                    final long ONE_MEGABYTE = 4000 * 4000;//how big the photo can be
                     photoReference.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
                         @Override
                         public void onSuccess(byte[] bytes) {
@@ -110,7 +115,15 @@ public class MyProfile extends AppCompatActivity {
                 bioText.setText(bio);//sets bio
                 yearText.setText(year);//sets year
                 majorText.setText(major);//sets major
-                locationWord.setText(location);//sets location
+                if(location.equals("Offline")){
+                    locationWord.setText(location);
+                    locationTime.setVisibility(View.GONE);//does not show a location time
+                }
+                else {
+                    locationWord.setText("At: " + location);//sets location
+                    locationTime.setVisibility(View.VISIBLE);
+                    locationTime.setText("Till: " + locationTimeD);//sets location time
+                }
             }
 
             @Override
@@ -120,12 +133,12 @@ public class MyProfile extends AppCompatActivity {
         };
         query.addListenerForSingleValueEvent(valueEventListener);
 
-        locationB.setOnClickListener(new View.OnClickListener(){
+        locationB.setOnClickListener(new View.OnClickListener(){//button to change location
             @Override
             public void onClick(View view) {
-                alert(userId);
+                alert(userId);//alert that allows you to choose your location and how long and sets each
             }
-        });//to change location
+        });
 
         editButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -136,10 +149,11 @@ public class MyProfile extends AppCompatActivity {
         });
     }
 
-    public void alert(final String userId){
-        final String[] items = new String[]{"Offline","Dining Hall", "Camelot Room", "Brubacher Cafe", "Starbucks", "Lally Cafe"};
-        final String[] timeW = {"20 minutes", "30 minutes", "40 minutes", "50 minutes", "60 minutes"};
-        final int[] timeN = {20, 30, 40, 50, 60};//holds values for conversion
+    public void alert(final String userId){//alert that allows you to choose your location and how long and sets each
+        final String[] items = new String[]{"Offline","Dining Hall", "Camelot Room", "Brubacher Cafe", "Starbucks", "Lally Cafe"};//holds the locations
+        final String[] timeW = {"20 minutes", "30 minutes", "40 minutes", "50 minutes", "60 minutes"};//holds the time options
+        final int[] timeMS = {1200000, 1800000, 2400000, 3000000, 3600000};//holds the millisecond values
+        final int[] timeM = {20, 30, 40, 50, 60};//holds the minute values
         AlertDialog.Builder builder2 = new AlertDialog.Builder(MyProfile.this);//first alert box
         builder2.setTitle("What do you want to change your location to");
         builder2.setItems(items, new DialogInterface.OnClickListener() {
@@ -152,16 +166,18 @@ public class MyProfile extends AppCompatActivity {
                     builder.setItems(timeW, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            int timer = timeN[which];//retrieves the corresponding number with word
-                            timer = timer * 10000;//converts to milliseconds
-                            Calendar calendar = Calendar.getInstance();
-                            SimpleDateFormat format = new SimpleDateFormat("HH:mm:ss");
-                            Toast.makeText(MyProfile.this, "Current Time: " + format.format(calendar.getTime()), Toast.LENGTH_SHORT).show();
-
+                            int timerMinute = timeM[which];//retrieves the corresponding minute with word
+                            int timerMili=timeMS[which];//retrieves the corresponding millisecond value with word
+                            String locationTimeW=" ";
+                            try {
+                                locationTimeW = timeDisplay(timerMinute);//retrieves the new time the user said they will be there untill
+                            } catch (ParseException e) {
+                                e.printStackTrace();
+                            }
                             final Handler handler = new Handler();
                             handler.postDelayed(new Runnable() {
                                 @Override
-                                public void run() {
+                                public void run() {//suppose to send a notification after the time time is up and set the location to offline
                                     locationWord.setText("Offline");
                                     NotificationCompat.Builder b = new NotificationCompat.Builder(MyProfile.this);
                                     b.setAutoCancel(true)
@@ -177,23 +193,36 @@ public class MyProfile extends AppCompatActivity {
                                     NotificationManager nm = (NotificationManager) MyProfile.this.getSystemService(Context.NOTIFICATION_SERVICE);
                                     nm.notify(1, b.build());
                                 }
-                            }, timer);
-                            locationWord.setText(location);//changes location
-                            editUser(userId, location);
+                            }, timerMili);
+                            locationWord.setText("At: "+location);//changes the location
+                            locationTime.setVisibility(View.VISIBLE);
+                            locationTime.setText("Till: "+locationTimeW);//changes the location time
+                            editUser(userId, location, locationTimeW);//changes it in the database
                         }
                     });
                     builder.show();
                 }
                 else {//if offline is chosen skips second alert
                     locationWord.setText(location);//changes location
-                    editUser(userId, location);
+                    locationTime.setVisibility(View.GONE);
+                    String locationTimeW=" ";
+                    editUser(userId, location,locationTimeW);//changes it in the database
                 }
             }
         });
         builder2.show();
     }
-    public void alert2 (){
 
+    public String timeDisplay(int minutes) throws ParseException {//adds th eminutes to the current time to get the location time
+
+        SimpleDateFormat df = new SimpleDateFormat("HH:mm");
+        String currentDateandTime = df.format(new Date());
+        Date date = df.parse(currentDateandTime);
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        calendar.add(Calendar.MINUTE, minutes);
+        String newTime = df.format(calendar.getTime());
+        return newTime;
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -227,11 +256,12 @@ public class MyProfile extends AppCompatActivity {
         }
     }
     //adds user's profile to database
-    private void editUser(String id,String location) {
+    private void editUser(String id,String location, String locationTimeW) {
         mDatabase = FirebaseDatabase.getInstance().getReference().child("users").child(id).child("location");
         mDatabase.setValue(location);
+        mDatabase = FirebaseDatabase.getInstance().getReference().child("users").child(id).child("locationTime");
+        mDatabase.setValue(locationTimeW);
         return;
     }
-
 
 }

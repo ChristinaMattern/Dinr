@@ -43,6 +43,7 @@ public class OtherProfile extends AppCompatActivity {
     private DatabaseReference mDatabase;
     private String currentUserId;
     private String otherUserId;
+    private TextView locationTime;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,11 +55,12 @@ public class OtherProfile extends AppCompatActivity {
         majorText = (TextView)findViewById(R.id.majorText);
         locationText=(TextView)findViewById(R.id.location);
         followButton = (Button)findViewById(R.id.follow);
+        locationTime=(TextView)findViewById(R.id.locationTime);
         FirebaseUser currentFirebaseUser = FirebaseAuth.getInstance().getCurrentUser() ;
         currentUserId=currentFirebaseUser.getUid();//retrieves user id of signed in user
 
         SharedPreferences sharedPref=getSharedPreferences("OtherId", Context.MODE_PRIVATE);
-        otherUserId=sharedPref.getString("id","");//retirieves the user they clicked on
+        otherUserId=sharedPref.getString("id","");//retrieves the user the current user clicked on
         final DatabaseReference rootRef2 = FirebaseDatabase.getInstance().getReference();
         Query otherQuery = rootRef2.child("users").orderByChild("userId").equalTo(otherUserId);//finds the other user in the database
 
@@ -73,6 +75,7 @@ public class OtherProfile extends AppCompatActivity {
                 String major=" ";
                 String location=" ";
                 String id=" ";
+                String locationTimeW=" ";
                 for(DataSnapshot ds : dataSnapshot.getChildren()) {
                     id = (String) ds.getKey();//retrieves user's id to know where to put info into profile
                     otherUserId=id;
@@ -81,7 +84,8 @@ public class OtherProfile extends AppCompatActivity {
                     bio= (String) ds.child("bio").getValue();//retrieves bio
                     year= (String) ds.child("year").getValue();//retrieves year
                     major= (String) ds.child("major").getValue();//retrieves major
-                    location=(String) ds.child("location").getValue();
+                    location=(String) ds.child("location").getValue();//retrieves location
+                    locationTimeW=(String)ds.child("locationTime").getValue();//retrieves location time
                     //retrieves photo
                     StorageReference storageReference = FirebaseStorage.getInstance().getReference();
                     StorageReference photoReference= storageReference.child(id).child("image");
@@ -106,7 +110,15 @@ public class OtherProfile extends AppCompatActivity {
                 bioText.setText(bio);//sets bio
                 yearText.setText(year);//sets year
                 majorText.setText(major);//sets major
+                if(location.equals("Offline")){
                 locationText.setText(location);//sets location
+                locationTime.setVisibility(View.GONE);
+            }
+                else {
+                locationText.setText("At: " + location);//sets location
+                locationTime.setVisibility(View.VISIBLE);
+                locationTime.setText("Till: " + locationTimeW);//sets location time
+            }
                 //finds the current user in the database to check if the other user is in their friend's list
                 final DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
                 Query currentQuery = rootRef.child("users").orderByChild("userId").equalTo(currentUserId);
@@ -161,7 +173,7 @@ public class OtherProfile extends AppCompatActivity {
             public void onClick(View view) {
                 if ((followButton.getText().toString()).equals("Follow")) {//if user chooses to follow other user they will be added to their follow list in database
                     mDatabase = FirebaseDatabase.getInstance().getReference().child("users").child(currentUserId).child("flist").child(otherUserId);
-                    mDatabase.setValue(otherUserId);
+                    mDatabase.setValue(otherUserId);//adds other user to their follow list
                     followButton.setText("Unfollow");
                 } else {//if user chooses to unfollow other user will be removed from current user's follow list
                     mDatabase = FirebaseDatabase.getInstance().getReference().child("users").child(currentUserId).child("flist").child(otherUserId);
@@ -169,7 +181,7 @@ public class OtherProfile extends AppCompatActivity {
 
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapShot) {
-                                mDatabase.removeValue();
+                                mDatabase.removeValue();//removes other user from their follow list
                                 followButton.setText("Follow");
                         }
 
