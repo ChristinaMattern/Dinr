@@ -111,53 +111,15 @@ public class OtherProfile extends AppCompatActivity {
                 yearText.setText(year);//sets year
                 majorText.setText(major);//sets major
                 if(location.equals("Offline")){
-                locationText.setText(location);//sets location
-                locationTime.setVisibility(View.GONE);
-            }
+                    locationText.setText(location);//sets location
+                    locationTime.setVisibility(View.GONE);
+                }
                 else {
-                locationText.setText("At: " + location);//sets location
-                locationTime.setVisibility(View.VISIBLE);
-                locationTime.setText("Till: " + locationTimeW);//sets location time
-            }
-                //finds the current user in the database to check if the other user is in their friend's list
-                final DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
-                Query currentQuery = rootRef.child("users").orderByChild("userId").equalTo(currentUserId);
-                ValueEventListener valueEventListener = new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
+                    locationText.setText("At: " + location);//sets location
+                    locationTime.setVisibility(View.VISIBLE);
+                    locationTime.setText("Till: " + locationTimeW);//sets location time
+                }
 
-                        for(DataSnapshot ds : dataSnapshot.getChildren()) {
-                            String id = (String) ds.getKey();//gets current user's id
-                            currentUserId=id;
-                        }
-                        mDatabase = FirebaseDatabase.getInstance().getReference().child("users").child(currentUserId).child("flist");
-                        mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
-                            final boolean[] checked = new boolean[1];
-                            //decides what to set the follow button to
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot snapShot) {
-                                if (snapShot.hasChild(otherUserId)) {
-                                    checked[0] = true;
-                                    followButton.setText("Unfollow");
-                                }
-                                else{
-                                    followButton.setText("Follow");
-                                }
-                            }
-
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                            }
-                        });
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                    }
-                };
-                currentQuery.addListenerForSingleValueEvent(valueEventListener);
             }
 
 
@@ -168,31 +130,12 @@ public class OtherProfile extends AppCompatActivity {
         };
         otherQuery.addListenerForSingleValueEvent(valueEventListener2);
 
-        followButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if ((followButton.getText().toString()).equals("Follow")) {//if user chooses to follow other user they will be added to their follow list in database
-                    mDatabase = FirebaseDatabase.getInstance().getReference().child("users").child(currentUserId).child("flist").child(otherUserId);
-                    mDatabase.setValue(otherUserId);//adds other user to their follow list
-                    followButton.setText("Unfollow");
-                } else {//if user chooses to unfollow other user will be removed from current user's follow list
-                    mDatabase = FirebaseDatabase.getInstance().getReference().child("users").child(currentUserId).child("flist").child(otherUserId);
-                    mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
-
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot snapShot) {
-                                mDatabase.removeValue();//removes other user from their follow list
-                                followButton.setText("Follow");
-                        }
-
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                        }
-                    });
-                }
-            }
-        });
+       followButton.setOnClickListener(new View.OnClickListener() {
+           @Override
+           public void onClick(View v) {
+               startActivity(new Intent(OtherProfile.this, FriendSearch.class));
+           }
+       });
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {
