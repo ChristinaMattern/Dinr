@@ -1,7 +1,8 @@
 package com.example.dinr;
 /**
- * @author Christina Mattern
+ * @author Christina Mattern & Angela Cebada
  * @date 3/25/2019
+ * @update 5/7/2019
  * This is the home screen for the DINR application
  */
 
