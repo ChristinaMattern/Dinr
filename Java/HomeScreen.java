@@ -3,7 +3,6 @@ package com.example.dinr;
  * @author Christina Mattern
  * @date 3/25/2019
  * This is the home screen for the DINR application
- * @updated by Angela Cebada on 5/7/2019
  */
 
 import android.app.NotificationManager;
@@ -21,7 +20,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -34,9 +32,11 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 
@@ -98,7 +98,8 @@ public class HomeScreen extends AppCompatActivity implements Home_Screen_Adapter
     public void alert(final String userId){
         final String[] items = new String[]{"Offline","Dining Hall", "Camelot Room", "Brubacher Cafe", "Starbucks", "Lally Cafe"};
         final String[] timeW = {"20 minutes", "30 minutes", "40 minutes", "50 minutes", "60 minutes"};
-        final int[] timeN = {20, 30, 40, 50, 60};//holds values for conversion
+        final int[] timeMS = {1200000, 1800000, 2400000, 3000000, 3600000};//holds the millisecond values
+        final int[] timeM = {20, 30, 40, 50, 60};//holds the minute values
         AlertDialog.Builder builder2 = new AlertDialog.Builder(HomeScreen.this);//first alert box
         builder2.setTitle("What do you want to change your location to");
         builder2.setItems(items, new DialogInterface.OnClickListener() {
@@ -111,12 +112,14 @@ public class HomeScreen extends AppCompatActivity implements Home_Screen_Adapter
                     builder.setItems(timeW, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            int timer = timeN[which];//retrieves the corresponding number with word
-                            timer = timer * 10000;//converts to milliseconds
-                            Calendar calendar = Calendar.getInstance();
-                            SimpleDateFormat format = new SimpleDateFormat("HH:mm:ss");
-                            Toast.makeText(HomeScreen.this, "Current Time: " + format.format(calendar.getTime()), Toast.LENGTH_SHORT).show();
-
+                            int timerMinute = timeM[which];//retrieves the corresponding minute with word
+                            int timerMili=timeMS[which];//retrieves the corresponding millisecond value with word
+                            String locationTimeW=" ";
+                            try {
+                                locationTimeW = timeDisplay(timerMinute);//retrieves the new time the user said they will be there untill
+                            } catch (ParseException e) {
+                                e.printStackTrace();
+                            }
                             final Handler handler = new Handler();
                             handler.postDelayed(new Runnable() {
                                 @Override
@@ -136,20 +139,33 @@ public class HomeScreen extends AppCompatActivity implements Home_Screen_Adapter
                                     NotificationManager nm = (NotificationManager) HomeScreen.this.getSystemService(Context.NOTIFICATION_SERVICE);
                                     nm.notify(1, b.build());
                                 }
-                            }, timer);
+                            }, timerMili);
                             locationText.setText("Your current location is "+location);//changes location
-                            editUser(userId, location);
+                            editUser(userId, location, locationTimeW);
                         }
                     });
                     builder.show();
                 }
                 else {//if offline is chosen skips second alert
+                    String locationTIme = " ";
                     locationText.setText("You are currently offline");//changes location
-                    editUser(userId, location);
+                    editUser(userId, location, locationTIme);
                 }
             }
         });
         builder2.show();
+    }
+
+    public String timeDisplay(int minutes) throws ParseException {//adds the minutes to the current time to get the location time
+
+        SimpleDateFormat df = new SimpleDateFormat("HH:mm");
+        String currentDateandTime = df.format(new Date());
+        Date date = df.parse(currentDateandTime);
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        calendar.add(Calendar.MINUTE, minutes);
+        String newTime = df.format(calendar.getTime());
+        return newTime;
     }
 
     @Override
@@ -207,9 +223,11 @@ public class HomeScreen extends AppCompatActivity implements Home_Screen_Adapter
         }
     }
     //adds user's profile to database
-    private void editUser(String id,String location) {
+    private void editUser(String id,String location, String locationTimeW) {
         mDatabase = FirebaseDatabase.getInstance().getReference().child("users").child(id).child("location");
         mDatabase.setValue(location);
+        mDatabase = FirebaseDatabase.getInstance().getReference().child("users").child(id).child("locationTime");
+        mDatabase.setValue(locationTimeW);
         return;
     }
 }
