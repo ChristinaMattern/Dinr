@@ -1,6 +1,6 @@
 # Dinr
 
-Dinr is a mobile application for Android devices. The purpose of the application is to enocurage social interaction on campus and
+Dinr is a mobile application for Android devices. The purpose of the application is to encourage social interaction on campus and
 inform students about the dining options available at The College of Saint Rose. 
 
 ## To use:
